@@ -14,6 +14,7 @@ const { eser } = Astro.props;
 const satildi   = eser.durum === 'satildi';
 const galeride  = !satildi && typeof eser.fiyat === 'string';
 const satilik   = !satildi && typeof eser.fiyat === 'number' && eser.fiyat > 0;
+const base      = import.meta.env.BASE_URL;
 
 const ilgiliEserler = eserler
   .filter(e => e.kategori === eser.kategori && e.slug !== eser.slug)
@@ -31,9 +32,9 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
   <!-- Breadcrumb -->
   <div class="max-w-7xl mx-auto px-6 pt-6 pb-2">
     <nav class="flex items-center gap-2 text-xs text-muted tracking-wide">
-      <a href="/" class="hover:text-ink transition-colors">Ana Sayfa</a>
+      <a href={base} class="hover:text-ink transition-colors">Ana Sayfa</a>
       <span>/</span>
-      <a href="/eserler" class="hover:text-ink transition-colors">Eserler</a>
+      <a href={base + 'eserler'} class="hover:text-ink transition-colors">Eserler</a>
       <span>/</span>
       <span class="text-ink">{eser.baslik}</span>
     </nav>
@@ -153,7 +154,7 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
           class="relative cursor-crosshair select-none w-full"
         >
           <img
-            src={eser.ana_fotograf}
+            src={base + eser.ana_fotograf.slice(1)}
             alt={eser.baslik}
             id="main-img"
             class="w-full h-auto block"
