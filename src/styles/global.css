@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FAF8F5;
+  --color-ink: #1C1A18;
+  --color-warm: #8B7355;
+  --color-gold: #C9A96E;
+  --color-soft: #F0EDE8;
+  --color-muted: #6B6560;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Jost', system-ui, sans-serif;
+}
+
+body {
+  background-color: #FAF8F5;
+  color: #1C1A18;
+  font-family: 'Jost', system-ui, sans-serif;
+  font-weight: 300;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Filtre butonları */
+.filter-btn {
+  background: transparent;
+  color: var(--color-muted);
+  border-color: color-mix(in srgb, var(--color-warm) 30%, transparent);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.filter-btn:hover {
+  color: var(--color-ink);
+  border-color: color-mix(in srgb, var(--color-warm) 60%, transparent);
+}
+.filter-btn[data-active="true"] {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+.filter-btn[data-active="true"]:hover {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}

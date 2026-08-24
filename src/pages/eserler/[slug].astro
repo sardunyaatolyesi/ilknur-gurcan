@@ -1,0 +1,288 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import EserKart from '../../components/EserKart.astro';
+import { eserler, formatFiyat } from '../../data/eserler';
+
+export function getStaticPaths() {
+  return eserler.map(eser => ({
+    params: { slug: eser.slug },
+    props: { eser },
+  }));
+}
+
+const { eser } = Astro.props;
+const satildi   = eser.durum === 'satildi';
+const galeride  = !satildi && typeof eser.fiyat === 'string';
+const satilik   = !satildi && typeof eser.fiyat === 'number' && eser.fiyat > 0;
+
+const ilgiliEserler = eserler
+  .filter(e => e.kategori === eser.kategori && e.slug !== eser.slug)
+  .slice(0, 3);
+
+const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser hakkında bilgi almak istiyorum.`);
+---
+
+<Layout
+  title={`${eser.baslik} — İlknur Gürcan`}
+  description={eser.aciklama ?? `${eser.baslik}, ${eser.yil}. ${eser.teknik}, ${eser.en}×${eser.boy} cm.`}
+  image={eser.ana_fotograf}
+>
+
+  <!-- Breadcrumb -->
+  <div class="max-w-7xl mx-auto px-6 pt-6 pb-2">
+    <nav class="flex items-center gap-2 text-xs text-muted tracking-wide">
+      <a href="/" class="hover:text-ink transition-colors">Ana Sayfa</a>
+      <span>/</span>
+      <a href="/eserler" class="hover:text-ink transition-colors">Eserler</a>
+      <span>/</span>
+      <span class="text-ink">{eser.baslik}</span>
+    </nav>
+  </div>
+
+  <!-- Ana içerik: Sol bilgiler / Sağ resim — tek ekrana sığacak şekilde -->
+  <section class="max-w-7xl mx-auto px-6 py-4">
+    <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:3.5rem; align-items:center; min-height:calc(100vh - 140px);">
+
+      <!-- Sol: Bilgiler -->
+      <div>
+        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">
+          {eser.kategori.charAt(0).toUpperCase() + eser.kategori.slice(1)}
+        </p>
+
+        <h1 class="font-serif text-4xl md:text-5xl text-ink font-light leading-tight mb-6">
+          {eser.baslik}
+        </h1>
+
+        <!-- Teknik bilgiler -->
+        <div class="border-t border-warm/20 py-5 space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Teknik</span>
+            <span class="text-ink">{eser.teknik}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Boyut</span>
+            <span class="text-ink">{eser.en} × {eser.boy} cm</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Yıl</span>
+            <span class="text-ink">{eser.yil}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Durum</span>
+            <span class={satildi ? 'text-muted' : 'text-warm font-[500]'}>
+              {satildi ? 'Satıldı' : 'Satışta'}
+            </span>
+          </div>
+        </div>
+
+        <!-- Fiyat -->
+        <div class="border-t border-warm/20 pt-5 pb-6">
+          <p class="text-xs text-muted tracking-widest uppercase mb-1">Fiyat</p>
+          <p class={`font-serif ${galeride ? 'text-lg' : 'text-3xl'} font-light ${satildi ? 'text-muted line-through' : 'text-ink'}`}>
+            {formatFiyat(eser.fiyat, eser.durum)}
+          </p>
+          {satilik && <p class="text-xs text-muted mt-1">KDV dahil · Kargo dahil</p>}
+        </div>
+
+        <!-- Butonlar -->
+        {satildi ? (
+          <div class="p-5 bg-soft text-center">
+            <p class="text-muted text-sm leading-relaxed">
+              Bu eser satılmıştır. Benzer eserler için iletişime geçebilirsiniz.
+            </p>
+            <a
+              href={`https://wa.me/905337136968?text=${whatsappMesaj}`}
+              target="_blank"
+              rel="noopener"
+              class="inline-block mt-3 text-xs tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 pb-0.5"
+            >
+              Benzer Eser İste
+            </a>
+          </div>
+        ) : satilik ? (
+          <div class="flex flex-col gap-3">
+            <button
+              class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
+              onclick="document.getElementById('satin-al-modal').classList.remove('hidden')"
+            >
+              Satın Al
+            </button>
+            <a
+              href={`https://wa.me/905337136968?text=${whatsappMesaj}`}
+              target="_blank"
+              rel="noopener"
+              class="w-full py-3 border border-warm/40 text-warm text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
+            >
+              Bilgi İste (WhatsApp)
+            </a>
+            <a
+              href={`mailto:ilknurgurcan06@gmail.com?subject=${eser.baslik} hakkında bilgi&body=${decodeURIComponent(whatsappMesaj)}`}
+              class="w-full py-3 border border-warm/20 text-muted text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
+            >
+              E-posta Gönder
+            </a>
+          </div>
+        ) : (
+          <div class="p-5 bg-soft text-center">
+            <p class="text-muted text-sm leading-relaxed">
+              Bu eser şu anda galerimizde sergilenmektedir. Bilgi ve satın alma için iletişime geçin.
+            </p>
+            <a
+              href={`https://wa.me/905337136968?text=${whatsappMesaj}`}
+              target="_blank"
+              rel="noopener"
+              class="inline-block mt-3 text-xs tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 pb-0.5"
+            >
+              Bilgi Al (WhatsApp)
+            </a>
+          </div>
+        )}
+
+        {eser.aciklama && (
+          <div class="mt-6 pt-5 border-t border-warm/20">
+            <p class="text-xs text-muted tracking-widest uppercase mb-2">Eser Hakkında</p>
+            <p class="text-muted leading-relaxed text-sm">{eser.aciklama}</p>
+          </div>
+        )}
+      </div>
+
+      <!-- Sağ: Resim + Büyüteç -->
+      <div class="relative flex flex-col items-center">
+        <div
+          id="loupe-container"
+          class="relative cursor-crosshair select-none w-full"
+        >
+          <img
+            src={eser.ana_fotograf}
+            alt={eser.baslik}
+            id="main-img"
+            class="w-full h-auto block"
+            style="max-height: calc(100vh - 180px); object-fit: contain;"
+            loading="eager"
+            draggable="false"
+          />
+          <!-- Büyüteç camı -->
+          <div
+            id="loupe-lens"
+            style="display:none; position:absolute; width:180px; height:180px; pointer-events:none; background-repeat:no-repeat; border: 2px solid rgba(201,169,110,0.8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);"
+          ></div>
+        </div>
+        <p class="text-xs text-muted mt-2 tracking-wide">Üzerine gelerek yakınlaştırın</p>
+
+        {satildi && (
+          <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
+            Satıldı
+          </div>
+        )}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- İlgili eserler -->
+  {ilgiliEserler.length > 0 && (
+    <section class="max-w-7xl mx-auto px-6 py-16 border-t border-warm/10">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Keşfet</p>
+      <h2 class="font-serif text-3xl text-ink font-light mb-10">İlgili Eserler</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {ilgiliEserler.map(e => <EserKart eser={e} />)}
+      </div>
+    </section>
+  )}
+
+  <!-- Satın Al Modal -->
+  <div id="satin-al-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/60 backdrop-blur-sm px-4">
+    <div class="bg-cream max-w-md w-full p-8 relative">
+      <button
+        onclick="document.getElementById('satin-al-modal').classList.add('hidden')"
+        class="absolute top-4 right-4 text-muted hover:text-ink"
+        aria-label="Kapat"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      <h3 class="font-serif text-2xl text-ink mb-2">{eser.baslik}</h3>
+      <p class="text-muted text-sm mb-6">Satın alma işlemi için lütfen bizimle iletişime geçin.</p>
+      <div class="flex flex-col gap-3">
+        <a
+          href={`https://wa.me/905337136968?text=${whatsappMesaj}`}
+          target="_blank"
+          rel="noopener"
+          class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase text-center hover:bg-ink/90 transition-colors"
+        >
+          WhatsApp ile İletişime Geç
+        </a>
+        <a
+          href={`mailto:ilknurgurcan06@gmail.com?subject=${eser.baslik} satın alma&body=${decodeURIComponent(whatsappMesaj)}`}
+          class="w-full py-3 border border-warm/30 text-warm text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
+        >
+          E-posta Gönder
+        </a>
+      </div>
+      <p class="text-xs text-muted mt-6 text-center">İyzico ödeme entegrasyonu yakında aktif olacak.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  const ZOOM = 3;
+  const LENS_SIZE = 180;
+
+  const mainImg = document.getElementById('main-img') as HTMLImageElement | null;
+  const lens = document.getElementById('loupe-lens') as HTMLElement | null;
+
+  function initLoupe() {
+    if (!mainImg || !lens) return;
+
+    // Görselin URL'sini background olarak ata
+    lens.style.backgroundImage = `url('${mainImg.src}')`;
+
+    mainImg.addEventListener('mouseenter', () => {
+      lens.style.display = 'block';
+    });
+
+    mainImg.addEventListener('mouseleave', () => {
+      lens.style.display = 'none';
+    });
+
+    mainImg.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = mainImg.getBoundingClientRect();
+
+      // object-fit:contain nedeniyle resim element içinde ortalanmış olabilir.
+      // Gerçek piksel boyutlarını ve offset'i hesapla.
+      const scale = Math.min(rect.width / mainImg.naturalWidth, rect.height / mainImg.naturalHeight);
+      const rw = mainImg.naturalWidth  * scale; // gerçek render genişliği
+      const rh = mainImg.naturalHeight * scale; // gerçek render yüksekliği
+      const ox = (rect.width  - rw) / 2;       // yatay boşluk
+      const oy = (rect.height - rh) / 2;       // dikey boşluk
+
+      // Cursor'ın gerçek resim pikselleri içindeki konumu
+      const x = e.clientX - rect.left - ox;
+      const y = e.clientY - rect.top  - oy;
+
+      // Lens, cursor'ı tam ortaya alır (element koordinatlarında)
+      lens.style.left = `${(e.clientX - rect.left) - LENS_SIZE / 2}px`;
+      lens.style.top  = `${(e.clientY - rect.top)  - LENS_SIZE / 2}px`;
+
+      // Background: render boyutunu zoom'la, cursor noktasını lens merkezine getir
+      lens.style.backgroundSize     = `${rw * ZOOM}px ${rh * ZOOM}px`;
+      lens.style.backgroundPosition = `${-(x * ZOOM - LENS_SIZE / 2)}px ${-(y * ZOOM - LENS_SIZE / 2)}px`;
+    });
+  }
+
+  // Resim yüklendikten sonra başlat (src zaten set edilmiş olabilir)
+  if (mainImg && mainImg.complete) {
+    initLoupe();
+  } else if (mainImg) {
+    mainImg.addEventListener('load', initLoupe);
+  }
+
+  // Modal dışına tıklayınca kapat
+  document.getElementById('satin-al-modal')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      (e.currentTarget as HTMLElement).classList.add('hidden');
+    }
+  });
+</script>

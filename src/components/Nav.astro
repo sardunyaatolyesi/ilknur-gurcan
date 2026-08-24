@@ -1,0 +1,96 @@
+---
+const navLinks = [
+  { href: '/eserler', label: 'Eserler' },
+  { href: '/sergiler', label: 'Sergiler' },
+  { href: '/hakkinda', label: 'Hakkında' },
+  { href: '/iletisim', label: 'İletişim' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header id="site-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent">
+  <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-serif text-xl tracking-wide transition-colors nav-logo">
+      İlknur Gürcan
+    </a>
+
+    <!-- Desktop menu -->
+    <ul class="hidden md:flex items-center gap-8">
+      {navLinks.map(link => (
+        <li>
+          <a
+            href={link.href}
+            class={`nav-link text-sm font-[400] tracking-widest uppercase transition-colors ${
+              currentPath.startsWith(link.href) ? 'text-gold' : ''
+            }`}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button id="mobile-menu-btn" class="md:hidden nav-icon" aria-label="Menü">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-cream/95 backdrop-blur-sm border-t border-warm/10">
+    <ul class="px-6 py-4 flex flex-col gap-4">
+      {navLinks.map(link => (
+        <li>
+          <a
+            href={link.href}
+            class="text-sm tracking-widest uppercase text-muted hover:text-ink transition-colors"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+
+  // Scroll-aware nav: transparent + white text on hero, cream bg + dark text after
+  const nav = document.getElementById('site-nav');
+  const logo = document.querySelector('.nav-logo') as HTMLElement | null;
+  const links = document.querySelectorAll<HTMLElement>('.nav-link:not(.text-gold)');
+  const icon = document.querySelector('.nav-icon') as HTMLElement | null;
+
+  function updateNav() {
+    const scrolled = window.scrollY > 60;
+    if (nav) {
+      nav.classList.toggle('bg-cream/95', scrolled);
+      nav.classList.toggle('backdrop-blur-sm', scrolled);
+      nav.classList.toggle('border-warm/10', scrolled);
+      nav.classList.toggle('border-transparent', !scrolled);
+    }
+    const textDark = scrolled ? 'text-ink' : 'text-cream';
+    const textLight = scrolled ? 'text-muted' : 'text-cream/80';
+    if (logo) {
+      logo.classList.toggle('text-ink', scrolled);
+      logo.classList.toggle('text-cream', !scrolled);
+    }
+    links.forEach(l => {
+      l.classList.toggle('text-muted', scrolled);
+      l.classList.toggle('text-cream/80', !scrolled);
+    });
+    if (icon) {
+      icon.classList.toggle('text-ink', scrolled);
+      icon.classList.toggle('text-cream', !scrolled);
+    }
+  }
+
+  updateNav();
+  window.addEventListener('scroll', updateNav, { passive: true });
+</script>

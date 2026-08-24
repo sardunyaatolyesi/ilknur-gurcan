@@ -1,0 +1,49 @@
+---
+import type { Eser } from '../data/eserler';
+import { formatFiyat } from '../data/eserler';
+
+interface Props {
+  eser: Eser;
+}
+
+const { eser } = Astro.props;
+const satildi = eser.durum === 'satildi';
+---
+
+<a
+  href={`/eserler/${eser.slug}`}
+  class="group block bg-soft rounded-sm overflow-hidden"
+>
+  <!-- Image container -->
+  <div class="relative overflow-hidden aspect-[4/5]">
+    <img
+      src={eser.ana_fotograf}
+      alt={eser.baslik}
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+    />
+
+    {satildi && (
+      <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
+        Satıldı
+      </div>
+    )}
+
+    {!satildi && (
+      <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/30 transition-all duration-300 flex items-center justify-center">
+        <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-cream text-sm tracking-widest uppercase border border-cream px-6 py-2">
+          Detay
+        </span>
+      </div>
+    )}
+  </div>
+
+  <!-- Card info -->
+  <div class="p-4">
+    <h3 class="font-serif text-lg text-ink leading-tight">{eser.baslik}</h3>
+    <p class="text-xs text-muted mt-1">{eser.en} × {eser.boy} cm · {eser.yil}</p>
+    <p class={`mt-2 text-sm font-[500] ${satildi ? 'text-muted line-through' : 'text-warm'}`}>
+      {formatFiyat(eser.fiyat, eser.durum)}
+    </p>
+  </div>
+</a>

@@ -1,0 +1,318 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EserKart from '../components/EserKart.astro';
+import { eserler } from '../data/eserler';
+
+const seciliEserler = eserler.filter(e => e.secili);
+const heroEserler   = eserler.filter(e => e.hero);
+const heroDefault   = heroEserler[0] ?? eserler[0];
+---
+
+<Layout
+  title="İlknur Gürcan — Sanatçı | Özgün Yağlıboya Eserler"
+  description="İlknur Gürcan'ın özgün yağlıboya eserlerini keşfedin. Kafeler, sokaklar ve figür serilerinden seçilmiş tablolar."
+>
+
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section class="relative h-screen min-h-[600px] flex items-center overflow-hidden">
+    <div class="absolute inset-0 bg-ink">
+      <img
+        id="hero-img"
+        src={heroDefault.ana_fotograf}
+        data-heroes={heroEserler.map(e => e.ana_fotograf).join(',')}
+        alt="İlknur Gürcan — Öne Çıkan Eser"
+        class="w-full h-full object-cover opacity-75"
+        loading="eager"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12">
+
+      <!-- Sol: başlık ve butonlar -->
+      <div>
+        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">Sardunya Atölyesi</p>
+        <h1 class="font-serif text-cream text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6">
+          İlknur<br /><em>Gürcan</em>
+        </h1>
+        <p class="text-cream/80 text-lg md:text-xl font-light max-w-md leading-relaxed mb-10">
+          Gündelik anların içindeki şiiri, yağlıboya ile tuvale taşıyorum.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            href="/eserler"
+            class="inline-flex items-center justify-center px-8 py-3 bg-gold text-ink text-sm tracking-widest uppercase font-[500] hover:bg-gold/90 transition-colors"
+          >
+            Eserleri Keşfet
+          </a>
+          <a
+            href="/hakkinda"
+            class="inline-flex items-center justify-center px-8 py-3 border border-cream/50 text-cream text-sm tracking-widest uppercase hover:border-cream transition-colors"
+          >
+            Hakkında
+          </a>
+        </div>
+      </div>
+
+      <!-- Sağ: yaklaşan etkinlikler paneli -->
+      <div class="hidden lg:block shrink-0 w-72 border border-cream/20 bg-ink/40 backdrop-blur-sm p-6">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-5">Yaklaşan Etkinlikler</p>
+      <div class="flex flex-col gap-5">
+        <div class="border-l-2 border-gold/60 pl-4">
+          <p class="text-cream text-sm font-[500] leading-snug">Yılbaşı Sergisi</p>
+          <p class="text-cream/60 text-xs mt-1">Sava Sanat Galerisi</p>
+          <p class="text-gold/80 text-xs mt-1">1 — 31 Ara 2026</p>
+        </div>
+        <div class="border-l-2 border-gold/60 pl-4">
+          <p class="text-cream text-sm font-[500] leading-snug">Kişisel Sergi</p>
+          <p class="text-cream/60 text-xs mt-1">Sava Sanat Galerisi</p>
+          <p class="text-gold/80 text-xs mt-1">9 — 24 Oca 2027</p>
+        </div>
+      </div>
+      <a href="/sergiler" class="inline-block mt-6 text-xs tracking-widest uppercase text-cream/50 hover:text-cream transition-colors border-b border-cream/20 hover:border-cream/50 pb-0.5">
+        Tüm sergiler →
+      </a>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ─── İSTATİSTİK BANDI ────────────────────────────────── -->
+  <section class="bg-ink py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        {[
+          { rakam: '20+', etiket: 'Yıllık Deneyim' },
+          { rakam: '15', etiket: 'Sergi' },
+          { rakam: '200+', etiket: 'Özgün Eser' },
+          { rakam: '8', etiket: 'Koleksiyon' },
+        ].map(({ rakam, etiket }) => (
+          <div>
+            <p class="font-serif text-gold text-4xl md:text-5xl font-light">{rakam}</p>
+            <p class="text-cream/50 text-xs tracking-widest uppercase mt-2">{etiket}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇILI ESERLER ──────────────────────────────────── -->
+  <section class="max-w-7xl mx-auto px-6 py-24">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div>
+        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Koleksiyon</p>
+        <h2 class="font-serif text-4xl md:text-5xl text-ink font-light">Seçili Eserler</h2>
+      </div>
+
+      <div class="flex flex-wrap gap-2" id="filter-buttons">
+        {['Tümü', 'Kafeler', 'Sokaklar', 'Figür'].map((label, i) => (
+          <button
+            data-filter={i === 0 ? 'tumu' : label.toLowerCase().replace('ü', 'u')}
+            class={`filter-btn px-4 py-2 text-xs tracking-widest uppercase transition-colors border ${
+              i === 0
+                ? 'bg-ink text-cream border-ink'
+                : 'bg-transparent text-muted border-warm/30 hover:border-warm hover:text-ink'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="eserler-grid">
+      {seciliEserler.map(eser => (
+        <div data-kategori={eser.kategori} class="eser-item" style="display:none">
+          <EserKart eser={eser} />
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/eserler"
+        class="inline-flex items-center gap-2 text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 hover:border-ink pb-1"
+      >
+        Tüm Eserleri Gör
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── HAKKINDA KISACA ─────────────────────────────────── -->
+  <section class="bg-soft py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="relative">
+          <div class="aspect-[3/4] bg-warm/20 overflow-hidden">
+            <img
+              src="/images/artist.jpg"
+              alt="İlknur Gürcan"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div class="absolute -bottom-4 -right-4 w-full h-full border border-warm/30 -z-10"></div>
+        </div>
+
+        <div>
+          <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">Sanatçı Hakkında</p>
+          <h2 class="font-serif text-4xl md:text-5xl text-ink font-light leading-tight mb-8">
+            Mühendislikten<br /><em>Sanata</em>
+          </h2>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              Yıllarca mühendis olarak çalıştıktan sonra, içimdeki sanatçıyı susturamadım.
+              Sardunya Atölyesi'ni kurarak kendimi tam anlamıyla resme adadım.
+            </p>
+            <p>
+              Kafeler, sokaklar ve insan figürü üzerine yoğunlaşan çalışmalarım;
+              gündelik yaşamın içindeki güzelliği, ışığı ve hareketi yakalamayı amaçlıyor.
+            </p>
+            <p>
+              Her eser, bir anın kalıcı hâli — tuval üzerinde donmuş bir his.
+            </p>
+          </div>
+          <a
+            href="/hakkinda"
+            class="inline-flex items-center gap-2 mt-8 text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 hover:border-ink pb-1"
+          >
+            Hikâyemi Oku
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── YAKLAŞAN SERGİLER ─────────────────────────────── -->
+  <section class="max-w-7xl mx-auto px-6 py-24">
+    <div class="mb-12">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Takvim</p>
+      <h2 class="font-serif text-4xl md:text-5xl text-ink font-light">Yaklaşan Sergiler</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Karma Sergi -->
+      <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">Karma Sergi</span>
+          <span class="text-xs text-muted">Ara 2026</span>
+        </div>
+        <h3 class="font-serif text-2xl text-ink font-light mb-2">Yılbaşı Sergisi</h3>
+        <p class="text-muted text-sm mb-1">Sava Sanat Galerisi</p>
+        <p class="text-warm text-sm">1 Aralık — 31 Aralık 2026</p>
+      </div>
+
+      <!-- Kişisel Sergi -->
+      <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">Kişisel Sergi</span>
+          <span class="text-xs text-muted">Oca 2027</span>
+        </div>
+        <h3 class="font-serif text-2xl text-ink font-light mb-2">İlknur Gürcan Kişisel Sergisi</h3>
+        <p class="text-muted text-sm mb-1">Sava Sanat Galerisi</p>
+        <p class="text-warm text-sm">9 Ocak — 24 Ocak 2027</p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-10">
+      <a
+        href="/sergiler"
+        class="inline-flex items-center gap-2 text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 hover:border-ink pb-1"
+      >
+        Tüm Sergileri Gör
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── CTA ────────────────────────────────────────────── -->
+  <section class="py-24 text-center">
+    <div class="max-w-2xl mx-auto px-6">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">Eser Edinmek İçin</p>
+      <h2 class="font-serif text-4xl md:text-5xl text-ink font-light mb-6">
+        Bir Eser Evini Bulsun
+      </h2>
+      <p class="text-muted leading-relaxed mb-10">
+        Seçtiğiniz eseri satın alın veya daha fazla bilgi almak için benimle iletişime geçin.
+        Her esere özel paketleme ve kargo desteği sunuyorum.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/eserler"
+          class="inline-flex items-center justify-center px-8 py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
+        >
+          Eserlere Bak
+        </a>
+        <a
+          href="/iletisim"
+          class="inline-flex items-center justify-center px-8 py-3 border border-warm/40 text-warm text-sm tracking-widest uppercase hover:border-warm hover:text-ink transition-colors"
+        >
+          İletişime Geç
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  // ── Yardımcı: diziyi karıştır ──────────────────────────────
+  function shuffle<T>(arr: T[]): T[] {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ── Hero: birden fazlaysa rastgele seç ────────────────────
+  const heroImg = document.getElementById('hero-img') as HTMLImageElement | null;
+  if (heroImg) {
+    const heroes = (heroImg.dataset.heroes ?? '').split(',').filter(Boolean);
+    if (heroes.length > 1) {
+      heroImg.src = heroes[Math.floor(Math.random() * heroes.length)];
+    }
+  }
+
+  // ── Seçili Eserler: rastgele 6 göster ────────────────────
+  const allItems = Array.from(document.querySelectorAll<HTMLElement>('.eser-item'));
+  const picked   = shuffle(allItems).slice(0, 6);
+  picked.forEach(el => {
+    el.style.display = '';
+    el.dataset.picked = 'true';
+  });
+
+  // ── Filtre butonları (yalnızca seçilen 6 üzerinde) ───────
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      buttons.forEach(b => {
+        b.classList.remove('bg-ink', 'text-cream', 'border-ink');
+        b.classList.add('bg-transparent', 'text-muted', 'border-warm/30');
+      });
+      btn.classList.add('bg-ink', 'text-cream', 'border-ink');
+      btn.classList.remove('bg-transparent', 'text-muted', 'border-warm/30');
+
+      allItems.forEach(item => {
+        if (item.dataset.picked !== 'true') return; // seçilmeyenler gizli kalır
+        const kat = item.dataset.kategori;
+        item.style.display = (filter === 'tumu' || kat === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
