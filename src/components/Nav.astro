@@ -1,10 +1,10 @@
 ---
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const navLinks = [
-  { href: base + 'eserler', label: 'Eserler' },
-  { href: base + 'sergiler', label: 'Sergiler' },
-  { href: base + 'hakkinda', label: 'Hakkında' },
-  { href: base + 'iletisim', label: 'İletişim' },
+  { href: base + '/eserler', label: 'Eserler' },
+  { href: base + '/sergiler', label: 'Sergiler' },
+  { href: base + '/hakkinda', label: 'Hakkında' },
+  { href: base + '/iletisim', label: 'İletişim' },
 ];
 
 const currentPath = Astro.url.pathname;
