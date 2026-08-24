@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const yaklaşanSergiler = [
   {
@@ -105,7 +106,7 @@ const gecmisSergiler = [
       Yaklaşan sergilere katılmak veya özel bir eser için bilgi almak ister misiniz?
     </p>
     <a
-      href="/iletisim"
+      href={base + '/iletisim'}
       class="inline-flex items-center justify-center px-8 py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
     >
       İletişime Geç
