@@ -42,10 +42,10 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
 
   <!-- Ana içerik: Sol bilgiler / Sağ resim — tek ekrana sığacak şekilde -->
   <section class="max-w-7xl mx-auto px-6 py-4">
-    <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:3.5rem; align-items:center; min-height:calc(100vh - 140px);">
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-10 md:gap-14 items-center">
 
-      <!-- Sol: Bilgiler -->
-      <div>
+      <!-- Sol: Bilgiler (mobilde 2. sıra) -->
+      <div class="order-2 md:order-1">
         <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">
           {eser.kategori.charAt(0).toUpperCase() + eser.kategori.slice(1)}
         </p>
@@ -147,8 +147,8 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
         )}
       </div>
 
-      <!-- Sağ: Resim + Büyüteç -->
-      <div class="relative flex flex-col items-center">
+      <!-- Sağ: Resim + Büyüteç (mobilde 1. sıra) -->
+      <div class="relative flex flex-col items-center order-1 md:order-2">
         <div
           id="loupe-container"
           class="relative cursor-crosshair select-none w-full"
