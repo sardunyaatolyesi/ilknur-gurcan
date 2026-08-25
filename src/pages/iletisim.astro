@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 
 const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi almak istiyorum.');
+
+// Web3Forms erişim anahtarı — web3forms.com'dan e-postayla gelir.
+// Değiştirmek için sadece bu satırı güncelleyin.
+const WEB3FORMS_ANAHTARI = '4637d97f-b1ac-49c5-ad13-b6c01d27909d';
 ---
 
 <Layout
@@ -70,17 +74,29 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
         <p class="text-xs text-muted tracking-widest uppercase mb-6">Mesaj Gönderin</p>
 
         <form
-          action="https://formspree.io/f/FORM_ID"
+          action="https://api.web3forms.com/submit"
           method="POST"
           class="space-y-5"
           id="iletisim-form"
         >
+          <input type="hidden" name="access_key" value={WEB3FORMS_ANAHTARI} />
+
+          <!-- Bot tuzağı: görünmez, insanlar doldurmaz, botlar doldurur -->
+          <input
+            type="checkbox"
+            name="botcheck"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            style="display:none"
+          />
+
           <div>
             <label for="isim" class="block text-xs text-muted tracking-widest uppercase mb-2">Adınız</label>
             <input
               type="text"
               id="isim"
-              name="isim"
+              name="name"
               required
               placeholder="Ad Soyad"
               class="w-full bg-transparent border border-warm/30 px-4 py-3 text-sm text-ink placeholder:text-muted/50 focus:outline-none focus:border-warm transition-colors"
@@ -103,13 +119,13 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
             <label for="konu" class="block text-xs text-muted tracking-widest uppercase mb-2">Konu</label>
             <select
               id="konu"
-              name="konu"
+              name="Konu"
               class="w-full bg-cream border border-warm/30 px-4 py-3 text-sm text-ink focus:outline-none focus:border-warm transition-colors"
             >
-              <option value="eser-bilgi">Eser Hakkında Bilgi</option>
-              <option value="satin-alma">Satın Alma</option>
-              <option value="sergi">Sergi Bilgisi</option>
-              <option value="diger">Diğer</option>
+              <option>Eser Hakkında Bilgi</option>
+              <option>Satın Alma</option>
+              <option>Sergi Bilgisi</option>
+              <option>Diğer</option>
             </select>
           </div>
 
@@ -117,7 +133,7 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
             <label for="mesaj" class="block text-xs text-muted tracking-widest uppercase mb-2">Mesajınız</label>
             <textarea
               id="mesaj"
-              name="mesaj"
+              name="Mesaj"
               required
               rows="6"
               placeholder="Mesajınızı buraya yazın..."
@@ -127,7 +143,8 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
 
           <button
             type="submit"
-            class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
+            id="form-gonder"
+            class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Gönder
           </button>
@@ -148,13 +165,29 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
 </Layout>
 
 <script>
-  const form = document.getElementById('iletisim-form') as HTMLFormElement | null;
+  const form   = document.getElementById('iletisim-form') as HTMLFormElement | null;
+  const buton  = document.getElementById('form-gonder') as HTMLButtonElement | null;
   const basari = document.getElementById('form-basari');
-  const hata = document.getElementById('form-hata');
+  const hata   = document.getElementById('form-hata');
+
+  function durumGoster(el: HTMLElement | null) {
+    basari?.classList.add('hidden');   // önce ikisini de gizle ki
+    hata?.classList.add('hidden');     // eski mesaj ekranda kalmasın
+    el?.classList.remove('hidden');
+  }
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (!buton) return;
+
+    durumGoster(null);
+    buton.disabled = true;
+    buton.textContent = 'Gönderiliyor…';
+
     const data = new FormData(form);
+    // E-postanın konu satırı, seçilen konuya göre anlamlı olsun
+    data.append('subject', `Sardunya Atölyesi — ${data.get('Konu') ?? 'Yeni mesaj'}`);
+
     try {
       const res = await fetch(form.action, {
         method: 'POST',
@@ -163,12 +196,15 @@ const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi alma
       });
       if (res.ok) {
         form.reset();
-        basari?.classList.remove('hidden');
+        durumGoster(basari);
       } else {
-        hata?.classList.remove('hidden');
+        durumGoster(hata);
       }
     } catch {
-      hata?.classList.remove('hidden');
+      durumGoster(hata);
+    } finally {
+      buton.disabled = false;
+      buton.textContent = 'Gönder';
     }
   });
 </script>
