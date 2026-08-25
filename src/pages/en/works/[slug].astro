@@ -1,0 +1,210 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import EserKart from '../../../components/EserKart.astro';
+import { eserler, formatFiyat } from '../../../data/eserler';
+
+export function getStaticPaths() {
+  return eserler.map(eser => ({
+    params: { slug: eser.slug },
+    props: { eser },
+  }));
+}
+
+const { eser } = Astro.props;
+const satildi  = eser.durum === 'satildi';
+const galeride = !satildi && typeof eser.fiyat === 'string';
+const base     = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const KATEGORI_EN: Record<string, string> = {
+  kafeler: 'Cafés', sokaklar: 'Streets', figur: 'Figures',
+  portre: 'Portraits', diger: 'Other',
+};
+
+const ilgiliEserler = eserler
+  .filter(e => e.kategori === eser.kategori && e.slug !== eser.slug)
+  .slice(0, 3);
+
+const mesaj = encodeURIComponent(
+  `Hello, I would like to ask about the painting "${eser.baslik_en}".`,
+);
+---
+
+<Layout
+  title={`${eser.baslik_en} — İlknur Gürcan`}
+  description={`${eser.baslik_en}, ${eser.yil}. Oil on canvas, ${eser.en}×${eser.boy} cm.`}
+  image={eser.ana_fotograf}
+>
+
+  <!-- Breadcrumb -->
+  <div class="max-w-7xl mx-auto px-6 pt-6 pb-2">
+    <nav class="flex items-center gap-2 text-xs text-muted tracking-wide">
+      <a href={base + '/en/'} class="hover:text-ink transition-colors">Home</a>
+      <span>/</span>
+      <a href={base + '/en/works'} class="hover:text-ink transition-colors">Works</a>
+      <span>/</span>
+      <span class="text-ink">{eser.baslik_en}</span>
+    </nav>
+  </div>
+
+  <section class="max-w-7xl mx-auto px-6 py-4">
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-10 md:gap-14 items-center">
+
+      <!-- Details (2nd on mobile) -->
+      <div class="order-2 md:order-1">
+        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">
+          {KATEGORI_EN[eser.kategori] ?? eser.kategori}
+        </p>
+
+        <h1 class="font-serif text-4xl md:text-5xl text-ink font-light leading-tight mb-1">
+          {eser.baslik_en}
+        </h1>
+        <p class="text-muted text-sm italic mb-6">
+          Original title: {eser.baslik}
+        </p>
+
+        <div class="border-t border-warm/20 py-5 space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Medium</span>
+            <span class="text-ink">Oil on canvas</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Dimensions</span>
+            <span class="text-ink">{eser.en} × {eser.boy} cm</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Year</span>
+            <span class="text-ink">{eser.yil}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Status</span>
+            <span class={satildi ? 'text-muted' : 'text-warm font-[500]'}>
+              {satildi ? 'Sold' : 'Available'}
+            </span>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="border-t border-warm/20 pt-5 pb-6">
+          <p class="text-xs text-muted tracking-widest uppercase mb-1">Price</p>
+          <p class={`font-serif ${galeride ? 'text-lg' : 'text-3xl'} font-light ${satildi ? 'text-muted line-through' : 'text-ink'}`}>
+            {formatFiyat(eser.fiyat, eser.durum, 'en')}
+          </p>
+        </div>
+
+        <!-- Enquiry (no checkout on the English site) -->
+        {satildi ? (
+          <div class="p-5 bg-soft text-center">
+            <p class="text-muted text-sm leading-relaxed">
+              This painting has been sold. Please get in touch if you would like to see
+              similar available work.
+            </p>
+            <a
+              href={`https://wa.me/905337136968?text=${mesaj}`}
+              target="_blank"
+              rel="noopener"
+              class="inline-block mt-3 text-xs tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 pb-0.5"
+            >
+              Ask About Similar Work
+            </a>
+          </div>
+        ) : (
+          <div class="flex flex-col gap-3">
+            <a
+              href={`https://wa.me/905337136968?text=${mesaj}`}
+              target="_blank"
+              rel="noopener"
+              class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase text-center hover:bg-ink/90 transition-colors"
+            >
+              Enquire on WhatsApp
+            </a>
+            <a
+              href={`mailto:ilknurgurcan06@gmail.com?subject=${encodeURIComponent(eser.baslik_en + ' — enquiry')}&body=${decodeURIComponent(mesaj)}`}
+              class="w-full py-3 border border-warm/40 text-warm text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
+            >
+              Enquire by Email
+            </a>
+            <p class="text-xs text-muted text-center leading-relaxed mt-1">
+              The studio is in Ankara, Türkiye. Shipping abroad can be arranged —
+              please ask and I will quote for your country.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <!-- Image (1st on mobile) -->
+      <div class="relative flex flex-col items-center order-1 md:order-2">
+        <div id="loupe-container" class="relative cursor-crosshair select-none w-full">
+          <img
+            src={base + eser.ana_fotograf}
+            alt={eser.baslik_en}
+            id="main-img"
+            class="w-full h-auto block"
+            style="max-height: calc(100vh - 180px); object-fit: contain;"
+            loading="eager"
+            draggable="false"
+          />
+          <div
+            id="loupe-lens"
+            style="display:none; position:absolute; width:180px; height:180px; pointer-events:none; background-repeat:no-repeat; border: 2px solid rgba(201,169,110,0.8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);"
+          ></div>
+        </div>
+        <p class="text-xs text-muted mt-2 tracking-wide">Hover to zoom</p>
+
+        {satildi && (
+          <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
+            Sold
+          </div>
+        )}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Related -->
+  {ilgiliEserler.length > 0 && (
+    <section class="max-w-7xl mx-auto px-6 py-16 border-t border-warm/10">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Discover</p>
+      <h2 class="font-serif text-3xl text-ink font-light mb-10">Related Works</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {ilgiliEserler.map(e => <EserKart eser={e} />)}
+      </div>
+    </section>
+  )}
+
+</Layout>
+
+<script>
+  const ZOOM = 3;
+  const LENS_SIZE = 180;
+
+  const mainImg = document.getElementById('main-img') as HTMLImageElement | null;
+  const lens = document.getElementById('loupe-lens') as HTMLElement | null;
+
+  function initLoupe() {
+    if (!mainImg || !lens) return;
+    lens.style.backgroundImage = `url('${mainImg.src}')`;
+
+    mainImg.addEventListener('mouseenter', () => { lens.style.display = 'block'; });
+    mainImg.addEventListener('mouseleave', () => { lens.style.display = 'none'; });
+
+    mainImg.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = mainImg.getBoundingClientRect();
+      const scale = Math.min(rect.width / mainImg.naturalWidth, rect.height / mainImg.naturalHeight);
+      const rw = mainImg.naturalWidth  * scale;
+      const rh = mainImg.naturalHeight * scale;
+      const ox = (rect.width  - rw) / 2;
+      const oy = (rect.height - rh) / 2;
+
+      const x = e.clientX - rect.left - ox;
+      const y = e.clientY - rect.top  - oy;
+
+      lens.style.left = `${(e.clientX - rect.left) - LENS_SIZE / 2}px`;
+      lens.style.top  = `${(e.clientY - rect.top)  - LENS_SIZE / 2}px`;
+      lens.style.backgroundSize     = `${rw * ZOOM}px ${rh * ZOOM}px`;
+      lens.style.backgroundPosition = `${-(x * ZOOM - LENS_SIZE / 2)}px ${-(y * ZOOM - LENS_SIZE / 2)}px`;
+    });
+  }
+
+  if (mainImg && mainImg.complete) initLoupe();
+  else mainImg?.addEventListener('load', initLoupe);
+</script>

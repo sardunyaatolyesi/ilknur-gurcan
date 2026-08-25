@@ -1,6 +1,7 @@
 ---
 import type { Eser } from '../data/eserler';
 import { formatFiyat } from '../data/eserler';
+import { dilBul, ceviri } from '../i18n/ui';
 
 interface Props {
   eser: Eser;
@@ -9,31 +10,35 @@ interface Props {
 const { eser } = Astro.props;
 const satildi = eser.durum === 'satildi';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dil  = dilBul(Astro.url.pathname);
+const t    = ceviri(dil);
+
+const baslik  = dil === 'tr' ? eser.baslik : eser.baslik_en;
+const detayUrl = dil === 'tr'
+  ? `${base}/eserler/${eser.slug}`
+  : `${base}/en/works/${eser.slug}`;
 ---
 
-<a
-  href={`${base}/eserler/${eser.slug}`}
-  class="group block bg-soft rounded-sm overflow-hidden"
->
+<a href={detayUrl} class="group block bg-soft rounded-sm overflow-hidden">
   <!-- Image container -->
   <div class="relative overflow-hidden aspect-[4/5]">
     <img
       src={base + eser.ana_fotograf}
-      alt={eser.baslik}
+      alt={baslik}
       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       loading="lazy"
     />
 
     {satildi && (
       <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
-        Satıldı
+        {t('durum.satildi')}
       </div>
     )}
 
     {!satildi && (
       <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/30 transition-all duration-300 flex items-center justify-center">
         <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-cream text-sm tracking-widest uppercase border border-cream px-6 py-2">
-          Detay
+          {dil === 'tr' ? 'Detay' : 'View'}
         </span>
       </div>
     )}
@@ -41,10 +46,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- Card info -->
   <div class="p-4">
-    <h3 class="font-serif text-lg text-ink leading-tight">{eser.baslik}</h3>
+    <h3 class="font-serif text-lg text-ink leading-tight">{baslik}</h3>
     <p class="text-xs text-muted mt-1">{eser.en} × {eser.boy} cm · {eser.yil}</p>
     <p class={`mt-2 text-sm font-[500] ${satildi ? 'text-muted line-through' : 'text-warm'}`}>
-      {formatFiyat(eser.fiyat, eser.durum)}
+      {formatFiyat(eser.fiyat, eser.durum, dil)}
     </p>
   </div>
 </a>

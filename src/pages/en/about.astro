@@ -1,0 +1,141 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Layout
+  title="About — İlknur Gürcan"
+  description="The story of painter İlknur Gürcan: from engineering to the Sardunya Painting Studio in Ankara."
+  image="/images/artist.jpg"
+>
+
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">The Artist</p>
+    <h1 class="font-serif text-5xl md:text-6xl text-ink font-light">İlknur Gürcan</h1>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+
+      <!-- Photo -->
+      <div class="relative">
+        <div class="aspect-[3/4] bg-warm/20 overflow-hidden">
+          <img
+            src={base + '/images/artist.jpg'}
+            alt="İlknur Gürcan"
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+        </div>
+        <div class="absolute -bottom-4 -right-4 w-full h-full border border-warm/30 -z-10"></div>
+      </div>
+
+      <!-- Biography -->
+      <div class="space-y-10">
+
+        <div>
+          <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">From Engineering to Painting</p>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              Born in Isparta in 1972, İlknur Gürcan studied at Ankara Science High School
+              and graduated in Industrial Engineering from Bilkent University. She went on
+              to work for many years as an engineer at ASELSAN and at TÜBİTAK ULAKBİM.
+            </p>
+            <p>
+              The passion for painting she had pursued on her own since childhood gradually
+              took shape under the guidance of the artists Mehmet Yılmaz, Nusret Dökmeci
+              and Oktay Bingöl.
+            </p>
+            <p>
+              In 2011 she founded the <em>Sardunya Painting Studio</em>, which became both
+              a home for her own work and a space where she teaches her students.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-warm/20 pt-8">
+          <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">Her Painting</p>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              İlknur Gürcan paints the daily social life of the contemporary city dweller.
+              Her canvases centre on cafés, streets and the human figure.
+            </p>
+            <p>
+              To carry fleeting light, the feeling of a moment and the quiet poetry of the
+              street onto canvas — this is the impulse behind every one of her works.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-warm/20 pt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <p class="text-xs text-muted tracking-widest uppercase mb-2">Education</p>
+            <p class="text-sm text-ink">Ankara Science High School</p>
+            <p class="text-sm text-ink">Bilkent University — Industrial Engineering</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted tracking-widest uppercase mb-2">Studio</p>
+            <p class="text-sm text-ink">Sardunya Painting Studio</p>
+            <p class="text-sm text-muted">Ankara · since 2011</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted tracking-widest uppercase mb-2">Medium</p>
+            <p class="text-sm text-ink">Oil on canvas</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted tracking-widest uppercase mb-2">Exhibitions</p>
+            <p class="text-sm text-ink">8 solo · numerous group shows</p>
+          </div>
+        </div>
+
+        <div class="border-t border-warm/20 pt-8 flex flex-col sm:flex-row gap-4">
+          <a
+            href={base + '/en/works'}
+            class="inline-flex items-center justify-center px-8 py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
+          >
+            Explore the Works
+          </a>
+          <a
+            href={base + '/en/contact'}
+            class="inline-flex items-center justify-center px-8 py-3 border border-warm/40 text-warm text-sm tracking-widest uppercase hover:border-warm hover:text-ink transition-colors"
+          >
+            Get in Touch
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Teachers -->
+  <section class="bg-soft py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Studied With</p>
+      <h2 class="font-serif text-3xl text-ink font-light mb-10">Her Mentors</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        {['Mehmet Yılmaz', 'Nusret Dökmeci', 'Oktay Bingöl'].map(ad => (
+          <div class="border-l-2 border-gold/50 pl-5">
+            <p class="font-serif text-xl text-ink font-light">{ad}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 py-16 text-center">
+    <p class="text-muted leading-relaxed mb-6">
+      İlknur Gürcan has taken part in many group exhibitions since 2008 and has held
+      eight solo exhibitions.
+    </p>
+    <a
+      href={base + '/en/exhibitions'}
+      class="inline-flex items-center gap-2 text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors border-b border-warm/50 hover:border-ink pb-1"
+    >
+      See All Exhibitions
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+      </svg>
+    </a>
+  </section>
+
+</Layout>

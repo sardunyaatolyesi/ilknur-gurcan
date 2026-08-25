@@ -1,0 +1,116 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import EserKart from '../../../components/EserKart.astro';
+import { eserler as tumEserler } from '../../../data/eserler';
+
+const eserler = [...tumEserler].sort((a, b) => b.yil - a.yil);
+---
+
+<Layout
+  title="Works — İlknur Gürcan"
+  description="Browse all original oil paintings by İlknur Gürcan — cafés, streets, figures and portraits."
+>
+
+  <!-- Heading -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-8">
+    <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Collection</p>
+    <h1 class="font-serif text-5xl md:text-6xl text-ink font-light mb-8">Works</h1>
+
+    <!-- Availability filter -->
+    <div class="flex flex-wrap gap-2 mb-3" id="durum-buttons">
+      {[
+        { label: 'Available',       filtre: 'satilabilir' },
+        { label: 'Previously Sold', filtre: 'satildi' },
+        { label: 'All',             filtre: 'tumu' },
+      ].map(({ label, filtre }) => (
+        <button data-durum={filtre} class="filter-btn px-4 py-2 text-xs tracking-widest uppercase border">
+          {label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Category filter -->
+    <div class="flex flex-wrap gap-2" id="kategori-buttons">
+      {[
+        { label: 'Cafés',      filtre: 'kafeler' },
+        { label: 'Streets',    filtre: 'sokaklar' },
+        { label: 'Figures',    filtre: 'figur' },
+        { label: 'Portraits',  filtre: 'portre' },
+        { label: 'Other',      filtre: 'diger' },
+        { label: 'All',        filtre: 'tumu' },
+      ].map(({ label, filtre }) => (
+        <button data-kategori={filtre} class="filter-btn px-4 py-2 text-xs tracking-widest uppercase border">
+          {label}
+        </button>
+      ))}
+    </div>
+
+    <p id="eser-sayaci" class="text-muted text-sm mt-4"></p>
+  </section>
+
+  <!-- Grid -->
+  <section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="eserler-grid">
+      {eserler.map(eser => (
+        <div data-kategori={eser.kategori} data-durum={eser.durum} class="eser-item" style="display:none">
+          <EserKart eser={eser} />
+        </div>
+      ))}
+    </div>
+
+    <p id="bos-mesaj" class="hidden text-center text-muted py-24 text-lg font-serif italic">
+      No works match this selection.
+    </p>
+  </section>
+
+</Layout>
+
+<script>
+  const items        = Array.from(document.querySelectorAll<HTMLElement>('.eser-item'));
+  const durumBtns    = document.querySelectorAll<HTMLButtonElement>('[data-durum]');
+  const kategoriBtns = document.querySelectorAll<HTMLButtonElement>('[data-kategori]');
+  const sayac        = document.getElementById('eser-sayaci');
+  const bosMesaj     = document.getElementById('bos-mesaj');
+  const grid         = document.getElementById('eserler-grid');
+
+  let aktifDurum    = 'satilabilir';
+  let aktifKategori = 'tumu';
+
+  function setActive(btn: HTMLButtonElement, aktif: boolean) {
+    btn.dataset.active = aktif ? 'true' : 'false';
+  }
+
+  function guncelle() {
+    let gorunen = 0;
+    items.forEach(item => {
+      const durumEsles    = aktifDurum    === 'tumu' || item.dataset.durum    === aktifDurum;
+      const kategoriEsles = aktifKategori === 'tumu' || item.dataset.kategori === aktifKategori;
+      const goster = durumEsles && kategoriEsles;
+      item.style.display = goster ? '' : 'none';
+      if (goster) gorunen++;
+    });
+    if (sayac)    sayac.textContent = `${gorunen} ${gorunen === 1 ? 'work' : 'works'}`;
+    if (bosMesaj) bosMesaj.classList.toggle('hidden', gorunen > 0);
+    if (grid)     grid.classList.toggle('hidden', gorunen === 0);
+  }
+
+  durumBtns.forEach(btn => {
+    setActive(btn, btn.dataset.durum === aktifDurum);
+    btn.addEventListener('click', () => {
+      aktifDurum = btn.dataset.durum!;
+      durumBtns.forEach(b => setActive(b, b.dataset.durum === aktifDurum));
+      guncelle();
+    });
+  });
+
+  kategoriBtns.forEach(btn => {
+    setActive(btn, btn.dataset.kategori === aktifKategori);
+    btn.addEventListener('click', () => {
+      aktifKategori = btn.dataset.kategori!;
+      kategoriBtns.forEach(b => setActive(b, b.dataset.kategori === aktifKategori));
+      guncelle();
+    });
+  });
+
+  guncelle();
+</script>

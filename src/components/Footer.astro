@@ -1,5 +1,38 @@
 ---
+import { dilBul, ceviri } from '../i18n/ui';
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dil  = dilBul(Astro.url.pathname);
+const t    = ceviri(dil);
+
+const linkler = dil === 'tr'
+  ? [
+      { href: `${base}/eserler`,  label: t('nav.eserler') },
+      { href: `${base}/sergiler`, label: t('nav.sergiler') },
+      { href: `${base}/hakkinda`, label: t('nav.hakkinda') },
+      { href: `${base}/iletisim`, label: t('nav.iletisim') },
+    ]
+  : [
+      { href: `${base}/en/works`,       label: t('nav.eserler') },
+      { href: `${base}/en/exhibitions`, label: t('nav.sergiler') },
+      { href: `${base}/en/about`,       label: t('nav.hakkinda') },
+      { href: `${base}/en/contact`,     label: t('nav.iletisim') },
+    ];
+
+const metin = {
+  tr: {
+    tanim: 'Sardunya Resim Atölyesi<br/>Özgün yağlıboya eserler',
+    sayfalar: 'Sayfalar',
+    iletisim: 'İletişim',
+    haklar: 'Tüm hakları saklıdır.',
+  },
+  en: {
+    tanim: 'Sardunya Painting Studio<br/>Original oil paintings',
+    sayfalar: 'Pages',
+    iletisim: 'Contact',
+    haklar: 'All rights reserved.',
+  },
+}[dil];
 ---
 
 <footer class="bg-ink text-cream/70 mt-24">
@@ -9,26 +42,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- Brand -->
       <div>
         <p class="font-serif text-2xl text-cream mb-3">İlknur Gürcan</p>
-        <p class="text-sm font-light leading-relaxed">
-          Sardunya Atölyesi<br/>
-          Özgün yağlıboya eserler
-        </p>
+        <p class="text-sm font-light leading-relaxed" set:html={metin.tanim} />
       </div>
 
       <!-- Links -->
       <div>
-        <p class="text-xs tracking-widest uppercase text-gold mb-4">Sayfalar</p>
+        <p class="text-xs tracking-widest uppercase text-gold mb-4">{metin.sayfalar}</p>
         <ul class="flex flex-col gap-2 text-sm">
-          <li><a href={base + '/eserler'} class="hover:text-cream transition-colors">Eserler</a></li>
-          <li><a href={base + '/sergiler'} class="hover:text-cream transition-colors">Sergiler</a></li>
-          <li><a href={base + '/hakkinda'} class="hover:text-cream transition-colors">Hakkında</a></li>
-          <li><a href={base + '/iletisim'} class="hover:text-cream transition-colors">İletişim</a></li>
+          {linkler.map(l => (
+            <li><a href={l.href} class="hover:text-cream transition-colors">{l.label}</a></li>
+          ))}
         </ul>
       </div>
 
       <!-- Contact -->
       <div>
-        <p class="text-xs tracking-widest uppercase text-gold mb-4">İletişim</p>
+        <p class="text-xs tracking-widest uppercase text-gold mb-4">{metin.iletisim}</p>
         <ul class="flex flex-col gap-3 text-sm">
           <li>
             <a href="mailto:ilknurgurcan06@gmail.com" class="hover:text-cream transition-colors">
@@ -51,8 +80,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
 
     <div class="mt-12 pt-8 border-t border-cream/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-cream/40">
-      <p>© {new Date().getFullYear()} İlknur Gürcan. Tüm hakları saklıdır.</p>
-      <p>Sardunya Atölyesi</p>
+      <p>© {new Date().getFullYear()} İlknur Gürcan. {metin.haklar}</p>
+      <p>Sardunya Resim Atölyesi</p>
     </div>
   </div>
 </footer>

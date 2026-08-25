@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { dilBul, digerDilYolu } from '../i18n/ui';
 import '../styles/global.css';
 
 interface Props {
@@ -9,15 +10,33 @@ interface Props {
   image?: string;
 }
 
+const dil = dilBul(Astro.url.pathname);
+
+const varsayilan = {
+  tr: {
+    title: 'İlknur Gürcan — Sanatçı',
+    description: "İlknur Gürcan'ın özgün yağlıboya eserlerini keşfedin. Kafeler, sokaklar ve figür serilerinden seçilmiş tablolar.",
+  },
+  en: {
+    title: 'İlknur Gürcan — Painter',
+    description: 'Original oil paintings by İlknur Gürcan. Cafés, streets and figures from everyday life.',
+  },
+}[dil];
+
 const {
-  title = 'İlknur Gürcan — Sanatçı',
-  description = 'İlknur Gürcan\'ın özgün yağlıboya eserlerini keşfedin. Kafeler, sokaklar ve figür serilerinden seçilmiş tablolar.',
+  title = varsayilan.title,
+  description = varsayilan.description,
   image = '/og-image.jpg',
 } = Astro.props;
+
+const site = Astro.site?.origin ?? 'https://ilknurgurcan.com';
+const buSayfa  = Astro.url.pathname;
+const trYolu   = digerDilYolu(buSayfa, 'tr');
+const enYolu   = digerDilYolu(buSayfa, 'en');
 ---
 
 <!DOCTYPE html>
-<html lang="tr">
+<html lang={dil}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,7 +46,15 @@ const {
   <meta property="og:description" content={description} />
   <meta property="og:image" content={image} />
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content={dil === 'tr' ? 'tr_TR' : 'en_US'} />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Arama motorlarına sayfanın diğer dildeki karşılığını bildir -->
+  <link rel="canonical" href={site + buSayfa} />
+  <link rel="alternate" hreflang="tr" href={site + trYolu} />
+  <link rel="alternate" hreflang="en" href={site + enYolu} />
+  <link rel="alternate" hreflang="x-default" href={site + trYolu} />
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body class="min-h-screen flex flex-col">

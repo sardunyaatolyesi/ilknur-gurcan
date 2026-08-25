@@ -1,0 +1,112 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const upcoming = [
+  {
+    tip: 'Group Exhibition',
+    baslik: 'New Year Exhibition',
+    mekan: 'Sava Art Gallery',
+    tarih: '1 December — 31 December 2026',
+    sehir: 'Ankara',
+    donem: 'December 2026',
+  },
+  {
+    tip: 'Solo Exhibition',
+    baslik: 'İlknur Gürcan Solo Exhibition',
+    mekan: 'Sava Art Gallery',
+    tarih: '9 January — 24 January 2027',
+    sehir: 'Ankara',
+    donem: 'January 2027',
+  },
+];
+
+const past = [
+  { yil: '2018',    etkinlik: '2nd International Bilkent Art Festival', mekan: 'Bilkent', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2018',    etkinlik: 'Ankara Science High School Alumni Ball', mekan: '', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2017',    etkinlik: "7th \"Secret of Knidos\" Art Workshop", mekan: 'UKKSA', sehir: 'Datça', tip: 'Group' },
+  { yil: '2016',    etkinlik: '2nd Art Ankara Contemporary Art Fair', mekan: '', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2015',    etkinlik: 'RC Art Gallery — Bilkent Art Street Opening Exhibition', mekan: 'RC Art Gallery', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2013',    etkinlik: 'Solo Exhibition', mekan: 'Atilla Sav Art Gallery', sehir: 'Ankara', tip: 'Solo' },
+  { yil: '2012',    etkinlik: 'Solo Exhibition', mekan: 'Ankara Tennis Club', sehir: 'Ankara', tip: 'Solo' },
+  { yil: '2011–12', etkinlik: 'Bilkent Art Street', mekan: '', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2011',    etkinlik: '2nd Elele Art Gallery Studios Exhibition', mekan: 'Elele Art Gallery', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2011',    etkinlik: 'Sardunya Painting Studio Opening Exhibition', mekan: 'Sardunya Studio', sehir: 'Ankara', tip: 'Solo' },
+  { yil: '2010–11', etkinlik: 'Bilkent Art Street', mekan: '', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2010',    etkinlik: '1st Elele Art Gallery Studios Exhibition', mekan: 'Elele Art Gallery', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2010',    etkinlik: 'Bilkent 1st Art Gathering', mekan: 'Bilkent', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2010',    etkinlik: 'Group Exhibition', mekan: 'İlke Art Gallery', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2009',    etkinlik: 'Solo Exhibition', mekan: 'Bilkent Art Street', sehir: 'Ankara', tip: 'Solo' },
+  { yil: '2009',    etkinlik: '1st National Juried Exhibition — Honourable Mention', mekan: 'SESAN', sehir: 'İzmir', tip: 'Group' },
+  { yil: '2009',    etkinlik: 'Bilkent Art Street', mekan: '', sehir: 'Ankara', tip: 'Group' },
+  { yil: '2008',    etkinlik: 'Group Exhibition', mekan: 'Vakıfbank Atakule Art Gallery', sehir: 'Ankara', tip: 'Group' },
+];
+---
+
+<Layout
+  title="Exhibitions — İlknur Gürcan"
+  description="Upcoming and past exhibitions of painter İlknur Gürcan."
+>
+
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Calendar</p>
+    <h1 class="font-serif text-5xl md:text-6xl text-ink font-light">Exhibitions</h1>
+  </section>
+
+  <!-- Upcoming -->
+  <section class="max-w-7xl mx-auto px-6 pb-20">
+    <h2 class="font-serif text-2xl text-ink font-light mb-8 border-b border-warm/20 pb-4">Upcoming</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {upcoming.map(s => (
+        <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
+          <div class="flex items-start justify-between gap-4 mb-6">
+            <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">{s.tip}</span>
+            <span class="text-xs text-muted">{s.donem}</span>
+          </div>
+          <h3 class="font-serif text-2xl text-ink font-light mb-2">{s.baslik}</h3>
+          <p class="text-muted text-sm mb-1">{s.mekan}{s.sehir ? ` · ${s.sehir}` : ''}</p>
+          <p class="text-warm text-sm mt-3">{s.tarih}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Past -->
+  <section class="bg-soft py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="font-serif text-2xl text-ink font-light mb-8 border-b border-warm/20 pb-4">Past Exhibitions</h2>
+
+      <div class="space-y-0">
+        {past.map((s, i) => (
+          <div class={`flex items-start gap-6 py-5 ${i < past.length - 1 ? 'border-b border-warm/10' : ''}`}>
+            <span class="font-serif text-gold text-sm w-16 shrink-0 pt-0.5">{s.yil}</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-ink text-sm leading-snug">{s.etkinlik}</p>
+              {s.mekan && <p class="text-muted text-xs mt-0.5">{s.mekan}</p>}
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <span class="text-muted text-xs">{s.sehir}</span>
+              <span class={`text-xs px-2 py-0.5 border ${
+                s.tip === 'Solo' ? 'text-gold border-gold/30' : 'text-muted border-warm/20'
+              }`}>{s.tip}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 py-16 text-center">
+    <p class="text-muted leading-relaxed mb-6">
+      Would you like to hear about upcoming exhibitions, or ask about a particular painting?
+    </p>
+    <a
+      href={base + '/en/contact'}
+      class="inline-flex items-center justify-center px-8 py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors"
+    >
+      Get in Touch
+    </a>
+  </section>
+
+</Layout>

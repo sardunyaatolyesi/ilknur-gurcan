@@ -1,0 +1,209 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const mesaj = encodeURIComponent('Hello, I would like to ask about a painting.');
+
+// Web3Forms access key — same form as the Turkish page.
+const WEB3FORMS_ANAHTARI = '4637d97f-b1ac-49c5-ad13-b6c01d27909d';
+---
+
+<Layout
+  title="Contact — İlknur Gürcan"
+  description="Get in touch with painter İlknur Gürcan about a work, an exhibition or the studio in Ankara."
+>
+
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Get in Touch</p>
+    <h1 class="font-serif text-5xl md:text-6xl text-ink font-light">Contact</h1>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+      <!-- Channels -->
+      <div class="space-y-6">
+        <p class="text-muted leading-relaxed">
+          For questions about a painting, prices, exhibitions or the studio, you can reach
+          me through any of the channels below. I usually reply within a day.
+        </p>
+
+        <!-- WhatsApp -->
+        <div class="border border-warm/20 p-6 hover:border-warm/50 transition-colors">
+          <p class="text-xs text-muted tracking-widest uppercase mb-2">WhatsApp</p>
+          <p class="font-serif text-2xl text-ink font-light mb-4">+90 533 713 69 68</p>
+          <a
+            href={`https://wa.me/905337136968?text=${mesaj}`}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-ink text-cream text-xs tracking-widest uppercase hover:bg-ink/90 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Send a Message
+          </a>
+        </div>
+
+        <!-- Email -->
+        <div class="border border-warm/20 p-6 hover:border-warm/50 transition-colors">
+          <p class="text-xs text-muted tracking-widest uppercase mb-2">Email</p>
+          <p class="font-serif text-2xl text-ink font-light mb-4">ilknurgurcan06@gmail.com</p>
+          <a
+            href="mailto:ilknurgurcan06@gmail.com"
+            class="inline-flex items-center gap-2 px-6 py-3 border border-warm/40 text-warm text-xs tracking-widest uppercase hover:border-warm hover:text-ink transition-colors"
+          >
+            Send an Email
+          </a>
+        </div>
+
+        <!-- Instagram -->
+        <div class="border border-warm/20 p-6 hover:border-warm/50 transition-colors">
+          <p class="text-xs text-muted tracking-widest uppercase mb-2">Instagram</p>
+          <p class="font-serif text-2xl text-ink font-light mb-1">@ilknurgurcan_art</p>
+          <p class="text-muted text-sm mb-4">New paintings and scenes from the studio</p>
+          <a
+            href="https://www.instagram.com/ilknurgurcan_art"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-6 py-3 border border-warm/40 text-warm text-xs tracking-widest uppercase hover:border-warm hover:text-ink transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            View Profile
+          </a>
+        </div>
+
+        <!-- Studio -->
+        <div class="border border-warm/20 p-6">
+          <p class="text-xs text-muted tracking-widest uppercase mb-2">Studio</p>
+          <p class="font-serif text-xl text-ink font-light">Sardunya Painting Studio</p>
+          <p class="text-muted text-sm mt-2 leading-relaxed">
+            MESA Koru Sitesi, Koru Çarşısı 2/A<br/>
+            Çayyolu — Ankara, Türkiye
+          </p>
+          <p class="text-muted text-xs mt-3 leading-relaxed">
+            Visits by appointment. Shipping abroad can be arranged — please ask and
+            I will quote for your country.
+          </p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div>
+        <p class="text-xs text-muted tracking-widest uppercase mb-6">Send a Message</p>
+
+        <form
+          action="https://api.web3forms.com/submit"
+          method="POST"
+          class="space-y-5"
+          id="iletisim-form"
+        >
+          <input type="hidden" name="access_key" value={WEB3FORMS_ANAHTARI} />
+          <input type="hidden" name="from_name" value="ilknurgurcan.com (EN)" />
+
+          <!-- Honeypot: invisible to people, filled in by bots -->
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
+
+          <div>
+            <label for="isim" class="block text-xs text-muted tracking-widest uppercase mb-2">Your Name</label>
+            <input
+              type="text" id="isim" name="name" required placeholder="Full name"
+              class="w-full bg-transparent border border-warm/30 px-4 py-3 text-sm text-ink placeholder:text-muted/50 focus:outline-none focus:border-warm transition-colors"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-xs text-muted tracking-widest uppercase mb-2">Email</label>
+            <input
+              type="email" id="email" name="email" required placeholder="you@example.com"
+              class="w-full bg-transparent border border-warm/30 px-4 py-3 text-sm text-ink placeholder:text-muted/50 focus:outline-none focus:border-warm transition-colors"
+            />
+          </div>
+
+          <div>
+            <label for="konu" class="block text-xs text-muted tracking-widest uppercase mb-2">Subject</label>
+            <select
+              id="konu" name="Subject"
+              class="w-full bg-cream border border-warm/30 px-4 py-3 text-sm text-ink focus:outline-none focus:border-warm transition-colors"
+            >
+              <option>Enquiry About a Work</option>
+              <option>Purchase &amp; Shipping</option>
+              <option>Exhibitions</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="mesaj" class="block text-xs text-muted tracking-widest uppercase mb-2">Message</label>
+            <textarea
+              id="mesaj" name="Message" required rows="6" placeholder="Write your message here…"
+              class="w-full bg-transparent border border-warm/30 px-4 py-3 text-sm text-ink placeholder:text-muted/50 focus:outline-none focus:border-warm transition-colors resize-none"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="form-gonder"
+            class="w-full py-3 bg-ink text-cream text-sm tracking-widest uppercase hover:bg-ink/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Send
+          </button>
+
+          <p id="form-basari" class="hidden text-center text-sm text-warm py-2">
+            Your message has been sent. I will get back to you shortly.
+          </p>
+          <p id="form-hata" class="hidden text-center text-sm text-muted py-2">
+            Something went wrong. Please reach me by email or WhatsApp instead.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  const form   = document.getElementById('iletisim-form') as HTMLFormElement | null;
+  const buton  = document.getElementById('form-gonder') as HTMLButtonElement | null;
+  const basari = document.getElementById('form-basari');
+  const hata   = document.getElementById('form-hata');
+
+  function durumGoster(el: HTMLElement | null) {
+    basari?.classList.add('hidden');
+    hata?.classList.add('hidden');
+    el?.classList.remove('hidden');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!buton) return;
+
+    durumGoster(null);
+    buton.disabled = true;
+    buton.textContent = 'Sending…';
+
+    const data = new FormData(form);
+    data.append('subject', `Sardunya Studio (EN) — ${data.get('Subject') ?? 'New message'}`);
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        form.reset();
+        durumGoster(basari);
+      } else {
+        durumGoster(hata);
+      }
+    } catch {
+      durumGoster(hata);
+    } finally {
+      buton.disabled = false;
+      buton.textContent = 'Send';
+    }
+  });
+</script>

@@ -1,18 +1,37 @@
 ---
+import { dilBul, ceviri, digerDilYolu } from '../i18n/ui';
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const navLinks = [
-  { href: base + '/eserler', label: 'Eserler' },
-  { href: base + '/sergiler', label: 'Sergiler' },
-  { href: base + '/hakkinda', label: 'Hakkında' },
-  { href: base + '/iletisim', label: 'İletişim' },
-];
+const dil  = dilBul(Astro.url.pathname);
+const t    = ceviri(dil);
+
+const kok = dil === 'tr' ? `${base}/` : `${base}/en/`;
+
+const navLinks = dil === 'tr'
+  ? [
+      { href: `${base}/eserler`,  label: t('nav.eserler') },
+      { href: `${base}/sergiler`, label: t('nav.sergiler') },
+      { href: `${base}/hakkinda`, label: t('nav.hakkinda') },
+      { href: `${base}/iletisim`, label: t('nav.iletisim') },
+    ]
+  : [
+      { href: `${base}/en/works`,       label: t('nav.eserler') },
+      { href: `${base}/en/exhibitions`, label: t('nav.sergiler') },
+      { href: `${base}/en/about`,       label: t('nav.hakkinda') },
+      { href: `${base}/en/contact`,     label: t('nav.iletisim') },
+    ];
 
 const currentPath = Astro.url.pathname;
+
+// Dil değiştirici: aynı sayfanın diğer dildeki karşılığına gider
+const digerDil     = dil === 'tr' ? 'en' : 'tr';
+const digerDilLink = base + digerDilYolu(currentPath, digerDil);
+const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
 ---
 
 <header id="site-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent">
   <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-    <a href={base + '/'} class="font-serif text-xl tracking-wide transition-colors nav-logo">
+    <a href={kok} class="font-serif text-xl tracking-wide transition-colors nav-logo">
       İlknur Gürcan
     </a>
 
@@ -30,6 +49,15 @@ const currentPath = Astro.url.pathname;
           </a>
         </li>
       ))}
+      <li>
+        <a
+          href={digerDilLink}
+          class="nav-dil text-xs font-[500] tracking-widest border px-2.5 py-1 transition-colors"
+          aria-label={digerDil === 'en' ? 'Switch to English' : 'Türkçeye geç'}
+        >
+          {digerDilEtiket}
+        </a>
+      </li>
     </ul>
 
     <!-- Mobile hamburger -->
@@ -53,6 +81,11 @@ const currentPath = Astro.url.pathname;
           </a>
         </li>
       ))}
+      <li class="pt-2 border-t border-warm/10">
+        <a href={digerDilLink} class="text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors">
+          {digerDil === 'en' ? 'English' : 'Türkçe'}
+        </a>
+      </li>
     </ul>
   </div>
 </header>
@@ -67,6 +100,7 @@ const currentPath = Astro.url.pathname;
   const logo = document.querySelector('.nav-logo') as HTMLElement | null;
   const links = document.querySelectorAll<HTMLElement>('.nav-link:not(.text-gold)');
   const icon = document.querySelector('.nav-icon') as HTMLElement | null;
+  const dilBtn = document.querySelector('.nav-dil') as HTMLElement | null;
 
   function updateNav() {
     const scrolled = window.scrollY > 60;
@@ -76,8 +110,6 @@ const currentPath = Astro.url.pathname;
       nav.classList.toggle('border-warm/10', scrolled);
       nav.classList.toggle('border-transparent', !scrolled);
     }
-    const textDark = scrolled ? 'text-ink' : 'text-cream';
-    const textLight = scrolled ? 'text-muted' : 'text-cream/80';
     if (logo) {
       logo.classList.toggle('text-ink', scrolled);
       logo.classList.toggle('text-cream', !scrolled);
@@ -89,6 +121,12 @@ const currentPath = Astro.url.pathname;
     if (icon) {
       icon.classList.toggle('text-ink', scrolled);
       icon.classList.toggle('text-cream', !scrolled);
+    }
+    if (dilBtn) {
+      dilBtn.classList.toggle('text-muted', scrolled);
+      dilBtn.classList.toggle('border-warm/40', scrolled);
+      dilBtn.classList.toggle('text-cream/80', !scrolled);
+      dilBtn.classList.toggle('border-cream/40', !scrolled);
     }
   }
 
