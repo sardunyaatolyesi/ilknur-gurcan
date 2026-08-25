@@ -32,12 +32,12 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- Sol: başlık ve butonlar -->
       <div>
-        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-4">Sardunya Atölyesi</p>
+        <p class="text-gold text-xs sm:text-sm font-[500] tracking-[0.18em] sm:tracking-[0.25em] uppercase mb-4">Sardunya Resim Atölyesi</p>
         <h1 class="font-serif text-cream text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6">
           İlknur<br /><em>Gürcan</em>
         </h1>
         <p class="text-cream/80 text-lg md:text-xl font-light max-w-md leading-relaxed mb-10">
-          Gündelik anların içindeki şiiri, yağlıboya ile tuvale taşıyorum.
+          Gündelik anların içindeki ışığı ve şiiri yağlıboya ile tuvale taşıyorum.
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
           <a
@@ -62,12 +62,12 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="border-l-2 border-gold/60 pl-4">
           <p class="text-cream text-sm font-[500] leading-snug">Yılbaşı Sergisi</p>
           <p class="text-cream/60 text-xs mt-1">Sava Sanat Galerisi</p>
-          <p class="text-gold/80 text-xs mt-1">1 — 31 Ara 2026</p>
+          <p class="text-gold/80 text-xs mt-1">1 — 31 Aralık 2026</p>
         </div>
         <div class="border-l-2 border-gold/60 pl-4">
           <p class="text-cream text-sm font-[500] leading-snug">Kişisel Sergi</p>
           <p class="text-cream/60 text-xs mt-1">Sava Sanat Galerisi</p>
-          <p class="text-gold/80 text-xs mt-1">9 — 24 Oca 2027</p>
+          <p class="text-gold/80 text-xs mt-1">9 — 24 Ocak 2027</p>
         </div>
       </div>
       <a href={base + '/sergiler'} class="inline-block mt-6 text-xs tracking-widest uppercase text-cream/50 hover:text-cream transition-colors border-b border-cream/20 hover:border-cream/50 pb-0.5">
@@ -124,7 +124,7 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="eserler-grid">
       {seciliEserler.map(eser => (
-        <div data-kategori={eser.kategori} class="eser-item" style="display:none">
+        <div data-kategori={eser.kategori} data-durum={eser.durum} class="eser-item" style="display:none">
           <EserKart eser={eser} />
         </div>
       ))}
@@ -204,7 +204,7 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
         <div class="flex items-start justify-between gap-4 mb-6">
           <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">Karma Sergi</span>
-          <span class="text-xs text-muted">Ara 2026</span>
+          <span class="text-xs text-muted">Aralık 2026</span>
         </div>
         <h3 class="font-serif text-2xl text-ink font-light mb-2">Yılbaşı Sergisi</h3>
         <p class="text-muted text-sm mb-1">Sava Sanat Galerisi</p>
@@ -215,7 +215,7 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
         <div class="flex items-start justify-between gap-4 mb-6">
           <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">Kişisel Sergi</span>
-          <span class="text-xs text-muted">Oca 2027</span>
+          <span class="text-xs text-muted">Ocak 2027</span>
         </div>
         <h3 class="font-serif text-2xl text-ink font-light mb-2">İlknur Gürcan Kişisel Sergisi</h3>
         <p class="text-muted text-sm mb-1">Sava Sanat Galerisi</p>
@@ -287,9 +287,21 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
   }
 
-  // ── Seçili Eserler: rastgele 6 göster ────────────────────
+  // ── Seçili Eserler: rastgele 6 göster (en fazla 1 satılmış) ─
+  const GOSTERILECEK = 6;
+  const EN_FAZLA_SATILMIS = 1;
+
   const allItems = Array.from(document.querySelectorAll<HTMLElement>('.eser-item'));
-  const picked   = shuffle(allItems).slice(0, 6);
+  const satilabilir = shuffle(allItems.filter(el => el.dataset.durum !== 'satildi'));
+  const satildi     = shuffle(allItems.filter(el => el.dataset.durum === 'satildi'));
+
+  // Kontenjanın çoğu satıştakilere, en fazla 1 tanesi satılmışa ayrılır
+  const satilmisAdet = Math.min(EN_FAZLA_SATILMIS, satildi.length);
+  const picked = shuffle([
+    ...satilabilir.slice(0, GOSTERILECEK - satilmisAdet),
+    ...satildi.slice(0, satilmisAdet),
+  ]);
+
   picked.forEach(el => {
     el.style.display = '';
     el.dataset.picked = 'true';
