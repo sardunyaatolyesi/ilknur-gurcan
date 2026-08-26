@@ -182,7 +182,8 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
             style="display:none; position:absolute; width:180px; height:180px; pointer-events:none; background-repeat:no-repeat; border: 2px solid rgba(201,169,110,0.8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);"
           ></div>
         </div>
-        <p class="text-xs text-muted mt-2 tracking-wide">Üzerine gelerek yakınlaştırın</p>
+        <!-- Yalnızca faresi olan cihazlarda görünür (bkz. aşağıdaki script) -->
+        <p id="zoom-ipucu" class="hidden text-xs text-muted mt-2 tracking-wide">Üzerine gelerek yakınlaştırın</p>
 
         {satildi && (
           <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
@@ -287,11 +288,22 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
     });
   }
 
-  // Resim yüklendikten sonra başlat (src zaten set edilmiş olabilir)
-  if (mainImg && mainImg.complete) {
-    initLoupe();
-  } else if (mainImg) {
-    mainImg.addEventListener('load', initLoupe);
+  // Büyüteç yalnızca fareli cihazlarda çalışır.
+  // Dokunmatik ekranda hover diye bir şey yok: dokununca mercek açılıyor,
+  // parmak çekilince kapanmıyor ve ekranın yarısını kaplıyor. Telefonda
+  // zaten parmakla yakınlaştırma aynı detayı daha iyi veriyor.
+  const fareVar = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (fareVar) {
+    document.getElementById('zoom-ipucu')?.classList.remove('hidden');
+    if (mainImg && mainImg.complete) {
+      initLoupe();
+    } else if (mainImg) {
+      mainImg.addEventListener('load', initLoupe);
+    }
+  } else {
+    // Dokunmatikte imleç ipucu da anlamsız
+    document.getElementById('loupe-container')?.classList.remove('cursor-crosshair');
   }
 
   // Modal dışına tıklayınca kapat

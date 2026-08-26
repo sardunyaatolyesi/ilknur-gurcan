@@ -162,7 +162,8 @@ const mesaj = encodeURIComponent(
             style="display:none; position:absolute; width:180px; height:180px; pointer-events:none; background-repeat:no-repeat; border: 2px solid rgba(201,169,110,0.8); box-shadow: 0 8px 32px rgba(0,0,0,0.4);"
           ></div>
         </div>
-        <p class="text-xs text-muted mt-2 tracking-wide">Hover to zoom</p>
+        <!-- Only shown on devices with a mouse (see script below) -->
+        <p id="zoom-ipucu" class="hidden text-xs text-muted mt-2 tracking-wide">Hover to zoom</p>
 
         {satildi && (
           <div class="absolute top-3 left-3 bg-ink/80 text-cream text-xs tracking-widest uppercase px-3 py-1">
@@ -219,6 +220,16 @@ const mesaj = encodeURIComponent(
     });
   }
 
-  if (mainImg && mainImg.complete) initLoupe();
-  else mainImg?.addEventListener('load', initLoupe);
+  // The loupe only runs on devices with a mouse. On touch screens there is no
+  // hover: a tap opens the lens, lifting the finger does not close it, and it
+  // covers half the screen. Pinch-to-zoom already gives the same detail there.
+  const fareVar = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (fareVar) {
+    document.getElementById('zoom-ipucu')?.classList.remove('hidden');
+    if (mainImg && mainImg.complete) initLoupe();
+    else mainImg?.addEventListener('load', initLoupe);
+  } else {
+    document.getElementById('loupe-container')?.classList.remove('cursor-crosshair');
+  }
 </script>

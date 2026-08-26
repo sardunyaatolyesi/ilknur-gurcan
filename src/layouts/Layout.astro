@@ -33,6 +33,11 @@ const site = Astro.site?.origin ?? 'https://ilknurgurcan.com';
 const buSayfa  = Astro.url.pathname;
 const trYolu   = digerDilYolu(buSayfa, 'tr');
 const enYolu   = digerDilYolu(buSayfa, 'en');
+
+// Sosyal ağlar og:image için mutlak URL ister; göreli yol verilirse
+// paylaşımda hiç görsel çıkmaz.
+const gorselUrl = image.startsWith('http') ? image : site + image;
+const sayfaUrl  = site + buSayfa;
 ---
 
 <!DOCTYPE html>
@@ -44,10 +49,16 @@ const enYolu   = digerDilYolu(buSayfa, 'en');
   <meta name="description" content={description} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={image} />
+  <meta property="og:image" content={gorselUrl} />
+  <meta property="og:url" content={sayfaUrl} />
+  <meta property="og:site_name" content="İlknur Gürcan" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content={dil === 'tr' ? 'tr_TR' : 'en_US'} />
+  <meta property="og:locale:alternate" content={dil === 'tr' ? 'en_US' : 'tr_TR'} />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={gorselUrl} />
 
   <!-- Arama motorlarına sayfanın diğer dildeki karşılığını bildir -->
   <link rel="canonical" href={site + buSayfa} />
