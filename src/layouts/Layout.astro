@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { dilBul, digerDilYolu } from '../i18n/ui';
+import { gorselBoyut, paylasimGorseli } from '../utils/gorselBoyut';
 import '../styles/global.css';
 
 interface Props {
@@ -36,8 +37,15 @@ const enYolu   = digerDilYolu(buSayfa, 'en');
 
 // Sosyal ağlar og:image için mutlak URL ister; göreli yol verilirse
 // paylaşımda hiç görsel çıkmaz.
-const gorselUrl = image.startsWith('http') ? image : site + image;
+// Paylaşımda tam çözünürlüklü dosya yerine küçültülmüş kopya kullanılır;
+// WhatsApp ~300 KB üstündeki görseller için önizleme üretmiyor.
+const ogYol     = image.startsWith('http') ? image : paylasimGorseli(image);
+const gorselUrl = ogYol.startsWith('http') ? ogYol : site + ogYol;
 const sayfaUrl  = site + buSayfa;
+
+// WhatsApp ve LinkedIn, önizleme üretmek için görselin boyutlarını da ister.
+// Bu etiketler yoksa çoğu zaman hiç önizleme göstermezler.
+const boyut = ogYol.startsWith('http') ? null : gorselBoyut(ogYol);
 ---
 
 <!DOCTYPE html>
@@ -50,6 +58,11 @@ const sayfaUrl  = site + buSayfa;
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={gorselUrl} />
+  <meta property="og:image:secure_url" content={gorselUrl} />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content={title} />
+  {boyut && <meta property="og:image:width" content={String(boyut.genislik)} />}
+  {boyut && <meta property="og:image:height" content={String(boyut.yukseklik)} />}
   <meta property="og:url" content={sayfaUrl} />
   <meta property="og:site_name" content="İlknur Gürcan" />
   <meta property="og:type" content="website" />

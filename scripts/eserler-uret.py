@@ -22,6 +22,13 @@ import sys
 import unicodedata
 from pathlib import Path
 
+# Windows konsolu varsayılan olarak cp1254 kullanır; Türkçe olmayan
+# karakterlerde (→ gibi) çökmemesi için çıktıyı UTF-8'e sabitle.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except AttributeError:
+    pass
+
 try:
     import openpyxl
 except ImportError:
