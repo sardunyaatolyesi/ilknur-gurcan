@@ -1,85 +1,79 @@
-# İlknur Gürcan — Sanatçı Web Sitesi Yol Haritası
+# Yol Haritası
 
-## Tamamlananlar ✅
+Son güncelleme: **26.08.2026**
+
+Güncel yapılacaklar listesi `../Yapılacaklar-WebSitesi.xlsx` dosyasında tutulur;
+bu belge genel resmi özetler.
+
+---
+
+## Tamamlananlar
 
 ### Altyapı
-- Astro + Tailwind CSS kurulumu
-- Tasarım sistemi (renk paleti, tipografi: Cormorant Garamond + Jost)
-- Layout, Nav (scroll-aware şeffaf/opak geçiş), Footer bileşenleri
+- Astro 6 + Tailwind CSS 4, TypeScript (strict)
+- Tasarım sistemi: krem/mürekkep/altın paleti, Cormorant Garamond + Jost
+- GitHub Pages'e otomatik yayın (her push'ta, GitHub Actions)
+- Alan adı: **ilknurgurcan.com** (Cloudflare DNS)
+- Excel → `eserler.ts` üretim betiği (`scripts/eserler-uret.py`)
 
-### Ana Sayfa `/`
-- Hero bölümü (tam ekran eser fotoğrafı, sanatçı adı, slogan, CTA butonları)
-- Sağ köşede yaklaşan etkinlikler paneli
-- İstatistik bandı (koyu arka plan, altın rakamlar)
-- Filtrelenebilir seçili eserler grid'i (Kafeler / Sokaklar / Figür)
-- Hakkında kısa bölümü (fotoğraf + metin)
-- Yaklaşan sergiler bölümü
-  - Yılbaşı Sergisi — Sava Sanat Galerisi, 1–31 Ara 2026
-  - Kişisel Sergi — Sava Sanat Galerisi, 9–24 Oca 2027
-- CTA bölümü
+### Sayfalar — Türkçe
+- **Ana sayfa** — hero (rastgele eser, okunurluk için saydam bant),
+  yaklaşan etkinlikler paneli, istatistik bandı, seçili eserler (rastgele 6,
+  en fazla 1 satılmış), hakkında özeti, yaklaşan sergiler, iletişim çağrısı
+- **Eserler** `/eserler` — 44 eser, çift filtre (satış durumu + kategori),
+  yıla göre sıralı
+- **Eser detayı** `/eserler/[slug]` — büyük görsel, büyüteç (yalnızca fareli
+  cihazlarda), teknik künye, fiyat, satın alma/bilgi isteme, ilgili eserler
+- **Hakkında** `/hakkinda` — biyografi, hocalar, sergi özeti
+- **Sergiler** `/sergiler` — 2 yaklaşan, 18 geçmiş sergi
+- **İletişim** `/iletisim` — WhatsApp, e-posta, Instagram, atölye adresi, form
 
-### Eserler Galerisi `/eserler`
-- 24 eser, 4'lü grid düzeni
-- Kategori filtre butonları (Tümü / Kafeler / Sokaklar / Figür / Diğer)
-- "Satıldı" etiketi ve gri filtre
-- Eser sayacı
+### Sayfalar — İngilizce (`/en/`)
+Türkçenin tamamı, **satın alma akışı hariç** (bilgi talebine yönlendirir).
+Eser adları çevrildi; detay sayfasında Türkçe orijinali de gösteriliyor.
+Menüde TR/EN geçişi aynı sayfada kalır.
 
 ### İçerik
-- 24 eser verisi (`src/data/eserler.ts`)
-- Eser bilgileri için Excel şablonu (`Eserler.xlsx`)
-
----
-
-## Yapılacaklar 🔧
-
-### Sayfalar
-
-#### Eser Detay Sayfası `/eserler/[slug]`
-- [ ] Büyük resim görünümü
-- [ ] Teknik bilgiler (boyut, yıl, teknik, fiyat)
-- [ ] "Satın Al" butonu (İyzico entegrasyonu)
-- [ ] "Bilgi İste" butonu (WhatsApp / e-posta)
-- [ ] Oda görselleştirme (statik)
-- [ ] İlgili eserler (aynı kategoriden 3 eser)
-
-#### Hakkında `/hakkinda`
-- [ ] Profesyonel fotoğraf
-- [ ] Biyografi (mühendislik → Sardunya Atölyesi)
-- [ ] Ödüller ve sergiler listesi
-- [ ] Atölye fotoğrafları
-
-#### Sergiler `/sergiler`
-- [ ] Yaklaşan ve geçmiş sergiler listesi
-- [ ] Her sergi: başlık, mekan, tarih, açıklama
-
-#### İletişim `/iletisim`
-- [ ] Formspree ile iletişim formu
-- [ ] WhatsApp butonu
-- [ ] Instagram linki
-- [ ] E-posta adresi
-
-### İçerik Güncellemeleri
-- [ ] `Eserler.xlsx` doldurulduktan sonra `eserler.ts` gerçek verilerle güncellenmesi
-- [ ] Her esere doğru kategori, isim, boyut, fiyat atanması
-- [ ] Hero ve sanatçı fotoğraflarının güncellenmesi
+- 44 eser, gerçek adlarıyla (Excel'den üretiliyor)
+- 19 eserin çerçeveli fotoğrafı kırpılmış haliyle değiştirildi
+- Eser adlarından türetilen adresler (`/eserler/aksam-servisi`)
 
 ### Entegrasyonlar
-- [ ] Decap CMS kurulumu (`/admin` paneli)
-  - `eserler` koleksiyonu
-  - `sergiler` koleksiyonu
-- [ ] İyzico ödeme entegrasyonu
-- [ ] Formspree iletişim formu entegrasyonu
+- **Web3Forms** — iletişim formu çalışıyor, spam koruması ve gönderim durumu var
+- **Google Search Console** — mülk doğrulandı, sitemap gönderildi
 
-### Yayına Alma
-- [ ] Netlify deploy kurulumu
-- [ ] Alan adı bağlantısı (ilknurgurcan.com)
-- [ ] Lighthouse performans ve SEO kontrolü
+### SEO
+- Her sayfada title, description, canonical
+- hreflang (TR ↔ EN), `x-default`
+- Open Graph + Twitter Card, mutlak URL'lerle; 1200×630 paylaşım kapağı
+- `sitemap-index.xml` (98 URL, dil karşılıkları dahil) ve `robots.txt`
+- JSON-LD: VisualArtwork + Offer + BreadcrumbList (88 eser sayfası)
 
 ---
 
-## Kapsam Dışı (Şimdilik)
-- İngilizce dil seçeneği
+## Bekleyenler
+
+### Öncelikli
+- **Eser açıklamaları** — 44 eserin hiçbirinde açıklama yok. Hem ziyaretçiyle
+  kurulan bağ hem arama sonuçları için en yüksek getirili iş.
+  Yöntem: Excel'e "Açıklama" sütunu, taslaklar hazırlanıp sanatçı onayına sunulur.
+- **Ana sayfa istatistikleri** — "20+ Yıllık Deneyim, 15 Sergi, 200+ Eser,
+  8 Koleksiyon" rakamları yer tutucu. Doğrusu bekleniyor.
+  (Not: sayfada 15 sergi yazıyor, Sergiler sayfasında 18 sergi listeleniyor.)
+- **Sergi listesi** — karma ve eski sergilerin gözden geçirilmesi
+
+### Öncelikli değil (gerekçeleriyle Excel'de)
+- İyzico ödeme entegrasyonu — ön koşul: vergi mükellefiyeti durumu
+- Görsel optimizasyonu — 13.6 MB toplam; kalite kontrolü gerektirir
+- Mobilde tam ekran görüntüleyici (lightbox)
+- Oda görselleştirme — ölçek doğruluğu sorunlu
+- E-posta bülteni — KVKK ve İYS yükümlülüğü getirir
+- Decap CMS (`/admin` paneli)
+
+---
+
+## Kapsam dışı
 - Blog / yazılar bölümü
 - Baskı satışı (print-on-demand)
 - Müzayede / teklif sistemi
-- Müşteri hesabı / sipariş takibi
+- Müşteri hesabı ve sipariş takibi

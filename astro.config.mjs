@@ -10,6 +10,13 @@ export default defineConfig({
   site: 'https://ilknurgurcan.com',
   devToolbar: { enabled: false },
 
+  // Eski adresler. Slug üretimi düzeltildiğinde (é gibi harfler artık doğru
+  // çevriliyor) bir eserin adresi değişti; eski bağlantı kırılmasın.
+  redirects: {
+    '/eserler/la-cr-maill-re':   '/eserler/la-cremaillere',
+    '/en/works/la-cr-maill-re':  '/en/works/la-cremaillere',
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

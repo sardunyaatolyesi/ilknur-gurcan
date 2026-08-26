@@ -1,43 +1,79 @@
-# Astro Starter Kit: Minimal
+# İlknur Gürcan — Sanatçı Web Sitesi
 
-```sh
-npm create astro@latest -- --template minimal
+Ressam İlknur Gürcan'ın (Sardunya Resim Atölyesi, Ankara) kişisel web sitesi.
+Türkçe ve İngilizce, 44 eserlik bir portfolyo.
+
+**Yayında:** [ilknurgurcan.com](https://ilknurgurcan.com) · [ilknurgurcan.com/en](https://ilknurgurcan.com/en/)
+
+---
+
+## Kısaca nasıl çalışıyor
+
+Bu bir **statik site**. Yani veritabanı, sunucu tarafı kod veya aylık sunucu
+ücreti yok. `npm run build` komutu her sayfayı önceden üretilmiş HTML dosyasına
+çeviriyor; GitHub bunları ücretsiz olarak yayınlıyor.
+
+```
+Eserler.xlsx  →  eserler.ts  →  npm run build  →  dist/  →  GitHub  →  ilknurgurcan.com
+   (içerik)      (site verisi)     (98 sayfa)              (otomatik)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+`main` dalına yapılan her gönderim (push) siteyi otomatik yeniden yayınlar;
+2–3 dakika sürer. Ayrı bir işlem gerekmez.
 
-## 🚀 Project Structure
+## Kullanılan teknolojiler
 
-Inside of your Astro project, you'll see the following folders and files:
+| Ne | Neden |
+| :-- | :-- |
+| [Astro](https://astro.build) 6 | Statik site üretimi; çıktısı saf HTML/CSS/JS |
+| Tailwind CSS 4 | Stil (ayrı yapılandırma dosyası yok, `src/styles/global.css` içinde) |
+| TypeScript | Tip denetimi (strict) |
+| GitHub Pages + Actions | Ücretsiz barındırma ve otomatik yayın |
+| Cloudflare | DNS ve alan adı yönlendirmesi |
+| Web3Forms | İletişim formu (sunucu gerektirmeden e-posta) |
 
-```text
-/
-├── public/
+Node.js **22 veya üstü** gerekir (Astro 6 şartı).
+
+## Komutlar
+
+Tümü proje kökünden (`ilknur-gurcan/`) çalıştırılır:
+
+| Komut | Ne yapar |
+| :-- | :-- |
+| `npm install` | Bağımlılıkları kurar (ilk kurulumda bir kez) |
+| `npm run dev` | Yerel önizleme: `localhost:4321` |
+| `npm run build` | Siteyi `dist/` klasörüne üretir |
+| `npm run preview` | Üretilmiş siteyi yerelde açar |
+| `npm run astro check` | TypeScript hatalarını denetler |
+| `python scripts/eserler-uret.py` | Excel'den eser verisini üretir |
+
+## Klasör yapısı
+
+```
+ilknur-gurcan/
+├── public/              Doğrudan kopyalanan dosyalar
+│   ├── images/            Eser fotoğrafları (Resim1.jpeg …)
+│   ├── og-image.jpg       Sosyal medya paylaşım kapağı
+│   ├── robots.txt
+│   └── google…html        Search Console doğrulaması (SİLMEYİN)
+├── scripts/
+│   └── eserler-uret.py    Excel → eserler.ts dönüştürücü
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/        Nav, Footer, EserKart, EserSema
+│   ├── data/eserler.ts    Eser verisi (OTOMATİK ÜRETİLİR)
+│   ├── i18n/ui.ts         Türkçe/İngilizce metin sözlüğü
+│   ├── layouts/           Sayfa iskeleti, meta etiketleri
+│   ├── pages/             Türkçe sayfalar
+│   │   └── en/              İngilizce sayfalar
+│   └── styles/global.css  Renk paleti, fontlar, buton stilleri
+└── astro.config.mjs       Site adresi, sitemap, yönlendirmeler
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Belgeler
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **[ICERIK-GUNCELLEME.md](ICERIK-GUNCELLEME.md)** — Eser ekleme, fiyat değiştirme,
+  sergi güncelleme. Kod bilmeden yapılabilecek işler.
+- **[ROADMAP.md](ROADMAP.md)** — Yapılanlar ve bekleyen işler.
+- **[CLAUDE.md](CLAUDE.md)** — Claude Code için teknik notlar.
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Yapılacak işlerin güncel listesi `../Yapılacaklar-WebSitesi.xlsx` dosyasında tutulur.
