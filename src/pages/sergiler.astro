@@ -1,51 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { yaklasanSergiler, gecmisSergiler } from '../data/sergiler';
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-const yaklaşanSergiler = [
-  {
-    tip: 'Karma Sergi',
-    baslik: 'Yılbaşı Sergisi',
-    mekan: 'Sava Sanat Galerisi',
-    tarih: '1 Aralık — 31 Aralık 2026',
-    sehir: 'Ankara',
-    donem: 'Aralık 2026',
-  },
-  {
-    tip: 'Kişisel Sergi',
-    baslik: 'İlknur Gürcan Kişisel Sergisi',
-    mekan: 'Sava Sanat Galerisi',
-    tarih: '9 Ocak — 24 Ocak 2027',
-    sehir: 'Ankara',
-    donem: 'Ocak 2027',
-  },
-];
-
-const gecmisSergiler = [
-  { yil: '2018', etkinlik: '2. Uluslararası Bilkent Sanat Festivali', mekan: 'Bilkent', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2018', etkinlik: 'Ankara Fen Lisesi Mezunlar Balosu', mekan: '', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2017', etkinlik: '7. Knidos\'un Sır\'ı Sanat Çalıştayı', mekan: 'UKKSA', sehir: 'Datça', tip: 'Karma' },
-  { yil: '2016', etkinlik: '2. Art Ankara Çağdaş Sanatlar Fuarı', mekan: '', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2015', etkinlik: 'RC Sanat Galerisi — Bilkent Sanat Sokağı Açılış Sergisi', mekan: 'RC Sanat Galerisi', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2013', etkinlik: 'Kişisel Sergi', mekan: 'Atilla Sav Sanat Galerisi', sehir: 'Ankara', tip: 'Kişisel' },
-  { yil: '2012', etkinlik: 'Kişisel Sergi', mekan: 'Ankara Tenis Kulübü', sehir: 'Ankara', tip: 'Kişisel' },
-  { yil: '2011–12', etkinlik: 'Bilkent Sanat Sokağı', mekan: '', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2011', etkinlik: '2. Elele Sanat Galerisi Atölyeler Sergisi', mekan: 'Elele Sanat Galerisi', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2011', etkinlik: 'Sardunya Resim Atölyesi Açılış Sergisi', mekan: 'Sardunya Atölyesi', sehir: 'Ankara', tip: 'Kişisel' },
-  { yil: '2010–11', etkinlik: 'Bilkent Sanat Sokağı', mekan: '', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2010', etkinlik: '1. Elele Sanat Galerisi Atölyeler Sergisi', mekan: 'Elele Sanat Galerisi', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2010', etkinlik: 'Bilkent 1. Sanat Buluşması', mekan: 'Bilkent', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2010', etkinlik: 'Karma Sergi', mekan: 'İlke Sanat Galerisi', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2009', etkinlik: 'Kişisel Sergi', mekan: 'Bilkent Sanat Sokağı', sehir: 'Ankara', tip: 'Kişisel' },
-  { yil: '2009', etkinlik: '1. Ulusal Yarışmalı Sergi — Mansiyon Ödülü', mekan: 'SESAN', sehir: 'İzmir', tip: 'Karma' },
-  { yil: '2009', etkinlik: 'Bilkent Sanat Sokağı', mekan: '', sehir: 'Ankara', tip: 'Karma' },
-  { yil: '2008', etkinlik: 'Karma Sergi', mekan: 'Vakıfbank Atakule Sanat Galerisi', sehir: 'Ankara', tip: 'Karma' },
-];
 ---
 
 <Layout
   title="Sergiler — İlknur Gürcan"
-  description="İlknur Gürcan'ın yaklaşan ve geçmiş sergilerinin tam listesi."
+  description="İlknur Gürcan'ın yaklaşan ve geçmiş sergileri, katıldığı fuar, festival ve çalıştaylar."
 >
 
   <!-- Başlık -->
@@ -55,43 +17,50 @@ const gecmisSergiler = [
   </section>
 
   <!-- Yaklaşan sergiler -->
-  <section class="max-w-7xl mx-auto px-6 pb-20">
-    <h2 class="font-serif text-2xl text-ink font-light mb-8 border-b border-warm/20 pb-4">Yaklaşan Sergiler</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {yaklaşanSergiler.map(s => (
-        <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
-          <div class="flex items-start justify-between gap-4 mb-6">
-            <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">{s.tip}</span>
-            <span class="text-xs text-muted">{s.donem}</span>
+  {yaklasanSergiler.length > 0 && (
+    <section class="max-w-7xl mx-auto px-6 pb-20">
+      <h2 class="font-serif text-2xl text-ink font-light mb-8 border-b border-warm/20 pb-4">Yaklaşan Sergiler</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {yaklasanSergiler.map(s => (
+          <div class="border border-warm/20 p-8 hover:border-warm/50 transition-colors">
+            <div class="flex items-start justify-between gap-4 mb-6">
+              <span class="text-xs tracking-widest uppercase text-gold border border-gold/40 px-3 py-1">{s.tur} Sergi</span>
+              <span class="text-xs text-muted">{s.donem}</span>
+            </div>
+            <h3 class="font-serif text-2xl text-ink font-light mb-2">{s.baslik}</h3>
+            <p class="text-muted text-sm mb-1">{s.mekan}{s.sehir ? ` · ${s.sehir}` : ''}</p>
+            <p class="text-warm text-sm mt-3">{s.tarih}</p>
           </div>
-          <h3 class="font-serif text-2xl text-ink font-light mb-2">{s.baslik}</h3>
-          <p class="text-muted text-sm mb-1">{s.mekan}{s.sehir ? ` · ${s.sehir}` : ''}</p>
-          <p class="text-warm text-sm mt-3">{s.tarih}</p>
-        </div>
-      ))}
-    </div>
-  </section>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- Geçmiş sergiler -->
   <section class="bg-soft py-20">
     <div class="max-w-7xl mx-auto px-6">
-      <h2 class="font-serif text-2xl text-ink font-light mb-8 border-b border-warm/20 pb-4">Geçmiş Sergiler</h2>
+      <h2 class="font-serif text-2xl text-ink font-light mb-3 border-b border-warm/20 pb-4">Geçmiş Sergiler</h2>
+
+      <p class="text-muted text-sm leading-relaxed mb-8 max-w-2xl">
+        Aşağıda kişisel sergiler ile katıldığı fuar, festival ve çalıştaylar yer alıyor.
+        İlknur Gürcan bunların yanı sıra 2008'den bu yana çok sayıda karma sergide
+        eser sergilemiştir.
+      </p>
 
       <div class="space-y-0">
         {gecmisSergiler.map((s, i) => (
           <div class={`flex items-start gap-6 py-5 ${i < gecmisSergiler.length - 1 ? 'border-b border-warm/10' : ''}`}>
             <span class="font-serif text-gold text-sm w-16 shrink-0 pt-0.5">{s.yil}</span>
             <div class="flex-1 min-w-0">
-              <p class="text-ink text-sm leading-snug">{s.etkinlik}</p>
+              <p class="text-ink text-sm leading-snug">{s.baslik}</p>
               {s.mekan && <p class="text-muted text-xs mt-0.5">{s.mekan}</p>}
+              {s.not && <p class="text-gold text-xs mt-0.5">{s.not}</p>}
             </div>
             <div class="flex items-center gap-3 shrink-0">
-              <span class="text-muted text-xs">{s.sehir}</span>
-              <span class={`text-xs px-2 py-0.5 border ${
-                s.tip === 'Kişisel'
-                  ? 'text-gold border-gold/30'
-                  : 'text-muted border-warm/20'
-              }`}>{s.tip}</span>
+              <span class="text-muted text-xs hidden sm:inline">{s.sehir}</span>
+              <span class={`text-xs px-2 py-0.5 border whitespace-nowrap ${
+                s.tur === 'Kişisel' ? 'text-gold border-gold/30' : 'text-muted border-warm/20'
+              }`}>{s.tur}</span>
             </div>
           </div>
         ))}

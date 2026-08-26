@@ -57,17 +57,42 @@ Böylece kayıt durur ama sitede görünmez.
 
 ## Sergiler
 
-Sergiler Excel'de değil, doğrudan sayfa dosyalarında tutulur:
+Sergilerin kaynağı `SardunyaWebPage/Sergiler.xlsx` dosyasıdır.
+`src/data/sergiler.ts` bundan otomatik üretilir; elle düzenlemeyin.
 
-- Türkçe: `src/pages/sergiler.astro`
-- İngilizce: `src/pages/en/exhibitions.astro`
-- Ana sayfadaki "Yaklaşan Sergiler" bölümü: `src/pages/index.astro` ve `src/pages/en/index.astro`
+### Excel sütunları
 
-Dosyaların en üstündeki listeleri düzenlemek yeterli. Bir serginin
-geçmişe düşmesi için `yaklaşanSergiler` listesinden alıp `gecmisSergiler`
-listesine taşıyın.
+| Sütun | Açıklama |
+| :-- | :-- |
+| **Sergi Adı** | Sitede görünen ad |
+| **Tür** | `Kişisel`, `Karma`, `Fuar`, `Festival`, `Çalıştay` |
+| Mekan | Galeri/kurum adı |
+| Şehir | |
+| **Başlangıç Tarihi** | `11.12.2026` biçiminde, ya da yalnızca yıl: `2018` |
+| Bitiş Tarihi | Aynı biçim; tek günlükse boş bırakın |
+| Dönem (kısa) | `2011–12` gibi yıl aralıkları için |
+| **Durum** | `Yaklaşan` veya `Geçmiş` |
+| Notlar | Ödül gibi ek bilgi; sitede altın renkli görünür |
+| **Göster/Gizle** | `Gizle` yazarsanız sergi listeye çıkmaz |
 
-> Ay adlarını kısaltmayın: "Ara 2026" değil "Aralık 2026".
+### Sık yapılan işler
+
+**Yeni sergi:** Satır ekleyin, `Durum` sütununa `Yaklaşan` yazın.
+
+**Sergi bitti:** `Durum` sütununu `Geçmiş` yapın. Sayfada otomatik olarak
+üst bölümden alt listeye geçer.
+
+**Listeyi sadeleştirme:** `Göster/Gizle` sütununa `Gizle` yazın. Kayıt Excel'de
+kalır, sitede görünmez. Şu an 9 karma sergi bu şekilde gizli; sayfada bunun
+yerine "çok sayıda karma sergide eser sergilemiştir" ifadesi var.
+
+**Sergi adının İngilizcesi:** `scripts/sergiler-uret.py` içindeki `AD_EN`
+sözlüğünde tutulur. Yeni bir sergi eklerseniz betik uyarı verir ve İngilizce
+sayfada Türkçe ad görünür — sözlüğe eklemek yeterli.
+
+> Ay adları tarihten otomatik üretilir ve tam yazılır ("Aralık 2026").
+> Tarih hücresinde `011.12.2026` gibi üç haneli gün olursa betik durur;
+> hangi günün kastedildiği belirsiz olduğu için tahmin etmez.
 
 ---
 
@@ -92,8 +117,14 @@ Excel'i kaydedip **kapattıktan** sonra, proje klasöründe sırayla:
 python scripts/eserler-uret.py
 ```
 
-Çıktıda eser sayısı, satılan/satışta dağılımı ve hero eserler görünür.
-Beklediğinizle uyuşuyor mu bakın. Uyarı satırı varsa okuyun.
+```bash
+python scripts/sergiler-uret.py
+```
+
+(Yalnızca değiştirdiğiniz dosyanın betiğini çalıştırmanız yeterli.)
+
+Çıktıda eser/sergi sayıları ve dağılımlar görünür. Beklediğinizle uyuşuyor mu
+bakın. Uyarı satırı varsa okuyun.
 
 ```bash
 npm run build

@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import EserKart from '../../components/EserKart.astro';
 import { eserler } from '../../data/eserler';
+import { yaklasanSergiler } from '../../data/sergiler';
 
 const seciliEserler = eserler.filter(e => e.secili);
 const heroEserler   = eserler.filter(e => e.hero);
@@ -61,16 +62,13 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="hidden lg:block shrink-0 w-72 border border-cream/20 bg-ink/40 backdrop-blur-sm p-6">
         <p class="text-gold text-xs tracking-[0.3em] uppercase mb-5">Upcoming</p>
         <div class="flex flex-col gap-5">
-          <div class="border-l-2 border-gold/60 pl-4">
-            <p class="text-cream text-sm font-[500] leading-snug">New Year Exhibition</p>
-            <p class="text-cream/60 text-xs mt-1">Sava Art Gallery, Ankara</p>
-            <p class="text-gold/80 text-xs mt-1">1 — 31 December 2026</p>
-          </div>
-          <div class="border-l-2 border-gold/60 pl-4">
-            <p class="text-cream text-sm font-[500] leading-snug">Solo Exhibition</p>
-            <p class="text-cream/60 text-xs mt-1">Sava Art Gallery, Ankara</p>
-            <p class="text-gold/80 text-xs mt-1">9 — 24 January 2027</p>
-          </div>
+          {yaklasanSergiler.map(s => (
+            <div class="border-l-2 border-gold/60 pl-4">
+              <p class="text-cream text-sm font-[500] leading-snug">{s.baslik_en}</p>
+              <p class="text-cream/60 text-xs mt-1">{s.mekan_en}{s.sehir ? `, ${s.sehir}` : ''}</p>
+              <p class="text-gold/80 text-xs mt-1">{s.tarih_en}</p>
+            </div>
+          ))}
         </div>
         <a href={base + '/en/exhibitions'} class="inline-block mt-6 text-xs tracking-widest uppercase text-cream/50 hover:text-cream transition-colors border-b border-cream/20 hover:border-cream/50 pb-0.5">
           All exhibitions →
@@ -85,10 +83,10 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="max-w-7xl mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         {[
-          { rakam: '20+', etiket: 'Years Painting' },
-          { rakam: '15',  etiket: 'Exhibitions' },
+          { rakam: '20+',  etiket: 'Years Painting' },
+          { rakam: '5',    etiket: 'Solo Exhibitions' },
           { rakam: '200+', etiket: 'Original Works' },
-          { rakam: '8',   etiket: 'Collections' },
+          { rakam: '5',    etiket: 'Fairs / Festivals / Workshops' },
         ].map(({ rakam, etiket }) => (
           <div>
             <p class="font-serif text-gold text-4xl md:text-5xl font-light">{rakam}</p>
