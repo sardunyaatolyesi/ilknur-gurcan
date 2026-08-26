@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 *.local
+
+# Excel kaynak dosyalari depoda tutulmaz
+*.xlsx
