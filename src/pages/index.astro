@@ -32,13 +32,16 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- Sol: başlık ve butonlar -->
       <div>
-        <p class="text-gold text-xs sm:text-sm font-[500] tracking-[0.18em] sm:tracking-[0.25em] uppercase mb-4">Sardunya Resim Atölyesi</p>
-        <h1 class="font-serif text-cream text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6">
-          İlknur<br /><em>Gürcan</em>
-        </h1>
-        <p class="text-cream/80 text-lg md:text-xl font-light max-w-md leading-relaxed mb-10">
-          Gündelik anların içindeki ışığı ve şiiri yağlıboya ile tuvale taşıyorum.
-        </p>
+        <!-- Yazıların okunurluğu için hafif saydam bant (sağdaki panelden daha şeffaf) -->
+        <div class="inline-block bg-ink/25 backdrop-blur-[3px] px-6 py-6 md:px-8 md:py-7 mb-10">
+          <p class="text-gold text-xs sm:text-sm font-[500] tracking-[0.18em] sm:tracking-[0.25em] uppercase mb-4">Sardunya Resim Atölyesi</p>
+          <h1 class="font-serif text-cream text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6">
+            İlknur<br /><em>Gürcan</em>
+          </h1>
+          <p class="text-cream/90 text-lg md:text-xl font-light max-w-md leading-relaxed">
+            Gündelik anların içindeki ışığı ve şiiri yağlıboya ile tuvale taşıyorum.
+          </p>
+        </div>
         <div class="flex flex-col sm:flex-row gap-4">
           <a
             href={base + '/eserler'}
@@ -100,26 +103,9 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- ─── SEÇILI ESERLER ──────────────────────────────────── -->
   <section class="max-w-7xl mx-auto px-6 py-24">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-      <div>
-        <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Koleksiyon</p>
-        <h2 class="font-serif text-4xl md:text-5xl text-ink font-light">Seçili Eserler</h2>
-      </div>
-
-      <div class="flex flex-wrap gap-2" id="filter-buttons">
-        {['Tümü', 'Kafeler', 'Sokaklar', 'Figür'].map((label, i) => (
-          <button
-            data-filter={i === 0 ? 'tumu' : label.toLowerCase().replace('ü', 'u')}
-            class={`filter-btn px-4 py-2 text-xs tracking-widest uppercase transition-colors border ${
-              i === 0
-                ? 'bg-ink text-cream border-ink'
-                : 'bg-transparent text-muted border-warm/30 hover:border-warm hover:text-ink'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+    <div class="mb-12">
+      <p class="text-gold text-xs tracking-[0.3em] uppercase mb-3">Koleksiyon</p>
+      <h2 class="font-serif text-4xl md:text-5xl text-ink font-light">Seçili Eserler</h2>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="eserler-grid">
@@ -305,27 +291,5 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
   picked.forEach(el => {
     el.style.display = '';
     el.dataset.picked = 'true';
-  });
-
-  // ── Filtre butonları (yalnızca seçilen 6 üzerinde) ───────
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-
-      buttons.forEach(b => {
-        b.classList.remove('bg-ink', 'text-cream', 'border-ink');
-        b.classList.add('bg-transparent', 'text-muted', 'border-warm/30');
-      });
-      btn.classList.add('bg-ink', 'text-cream', 'border-ink');
-      btn.classList.remove('bg-transparent', 'text-muted', 'border-warm/30');
-
-      allItems.forEach(item => {
-        if (item.dataset.picked !== 'true') return; // seçilmeyenler gizli kalır
-        const kat = item.dataset.kategori;
-        item.style.display = (filter === 'tumu' || kat === filter) ? '' : 'none';
-      });
-    });
   });
 </script>

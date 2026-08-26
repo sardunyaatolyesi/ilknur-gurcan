@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import EserKart from '../../../components/EserKart.astro';
+import EserSema from '../../../components/EserSema.astro';
 import { eserler, formatFiyat } from '../../../data/eserler';
 
 export function getStaticPaths() {
@@ -20,9 +21,20 @@ const KATEGORI_EN: Record<string, string> = {
   portre: 'Portraits', diger: 'Other',
 };
 
-const ilgiliEserler = eserler
-  .filter(e => e.kategori === eser.kategori && e.slug !== eser.slug)
-  .slice(0, 3);
+// Related works: available first, then most recent.
+// Filled from other categories if this one has fewer than 3.
+const sirala = (liste: typeof eserler) =>
+  [...liste].sort((a, b) => {
+    const aSatildi = a.durum === 'satildi' ? 1 : 0;
+    const bSatildi = b.durum === 'satildi' ? 1 : 0;
+    if (aSatildi !== bSatildi) return aSatildi - bSatildi;
+    return b.yil - a.yil;
+  });
+
+const digerEserler   = eserler.filter(e => e.slug !== eser.slug);
+const ayniKategoride = sirala(digerEserler.filter(e => e.kategori === eser.kategori));
+const diger          = sirala(digerEserler.filter(e => e.kategori !== eser.kategori));
+const ilgiliEserler  = [...ayniKategoride, ...diger].slice(0, 3);
 
 const mesaj = encodeURIComponent(
   `Hello, I would like to ask about the painting "${eser.baslik_en}".`,
@@ -34,6 +46,8 @@ const mesaj = encodeURIComponent(
   description={`${eser.baslik_en}, ${eser.yil}. Oil on canvas, ${eser.en}×${eser.boy} cm.`}
   image={eser.ana_fotograf}
 >
+
+  <EserSema eser={eser} dil="en" />
 
   <!-- Breadcrumb -->
   <div class="max-w-7xl mx-auto px-6 pt-6 pb-2">

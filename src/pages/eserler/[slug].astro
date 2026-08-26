@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import EserKart from '../../components/EserKart.astro';
+import EserSema from '../../components/EserSema.astro';
 import { eserler, formatFiyat } from '../../data/eserler';
 
 export function getStaticPaths() {
@@ -16,9 +17,20 @@ const galeride  = !satildi && typeof eser.fiyat === 'string';
 const satilik   = !satildi && typeof eser.fiyat === 'number' && eser.fiyat > 0;
 const base      = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const ilgiliEserler = eserler
-  .filter(e => e.kategori === eser.kategori && e.slug !== eser.slug)
-  .slice(0, 3);
+// İlgili eserler: satıştakiler önce, sonra yeni tarihliler.
+// Aynı kategoride 3 eser yoksa diğer kategorilerden tamamlanır.
+const sirala = (liste: typeof eserler) =>
+  [...liste].sort((a, b) => {
+    const aSatildi = a.durum === 'satildi' ? 1 : 0;
+    const bSatildi = b.durum === 'satildi' ? 1 : 0;
+    if (aSatildi !== bSatildi) return aSatildi - bSatildi;
+    return b.yil - a.yil;
+  });
+
+const digerEserler   = eserler.filter(e => e.slug !== eser.slug);
+const ayniKategoride = sirala(digerEserler.filter(e => e.kategori === eser.kategori));
+const diger          = sirala(digerEserler.filter(e => e.kategori !== eser.kategori));
+const ilgiliEserler  = [...ayniKategoride, ...diger].slice(0, 3);
 
 const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser hakkında bilgi almak istiyorum.`);
 ---
@@ -28,6 +40,8 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
   description={eser.aciklama ?? `${eser.baslik}, ${eser.yil}. ${eser.teknik}, ${eser.en}×${eser.boy} cm.`}
   image={eser.ana_fotograf}
 >
+
+  <EserSema eser={eser} dil="tr" />
 
   <!-- Breadcrumb -->
   <div class="max-w-7xl mx-auto px-6 pt-6 pb-2">

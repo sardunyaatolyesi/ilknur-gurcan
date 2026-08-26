@@ -1,0 +1,96 @@
+---
+/**
+ * Eser detay sayfaları için schema.org künyesi (JSON-LD).
+ * Ziyaretçi görmez; arama motorlarının sayfayı doğru anlaması içindir.
+ *
+ * Üç şema birlikte veriliyor:
+ *   VisualArtwork  — bunun bir sanat eseri olduğunu, tekniğini, ölçüsünü anlatır
+ *   Offer          — satıştaysa fiyat ve durum bilgisi
+ *   BreadcrumbList — arama sonucunda çıplak URL yerine sayfa yolu görünsün
+ */
+import type { Eser } from '../data/eserler';
+
+interface Props {
+  eser: Eser;
+  dil: 'tr' | 'en';
+}
+
+const { eser, dil } = Astro.props;
+
+const SITE = 'https://ilknurgurcan.com';
+const satildi = eser.durum === 'satildi';
+const baslik  = dil === 'tr' ? eser.baslik : eser.baslik_en;
+
+const eserUrl = dil === 'tr'
+  ? `${SITE}/eserler/${eser.slug}`
+  : `${SITE}/en/works/${eser.slug}`;
+
+const listeUrl = dil === 'tr' ? `${SITE}/eserler` : `${SITE}/en/works`;
+const kokUrl   = dil === 'tr' ? `${SITE}/`        : `${SITE}/en/`;
+
+const etiket = dil === 'tr'
+  ? { anasayfa: 'Ana Sayfa', eserler: 'Eserler' }
+  : { anasayfa: 'Home',      eserler: 'Works' };
+
+const sanatci = {
+  '@type': 'Person',
+  name: 'İlknur Gürcan',
+  jobTitle: dil === 'tr' ? 'Ressam' : 'Painter',
+  url: SITE,
+  sameAs: ['https://www.instagram.com/ilknurgurcan_art'],
+};
+
+// Fiyat yalnızca gerçek bir sayıysa Offer'a yazılır.
+// Galeri notu ("Sava Sanat Galerisi'nde Satışta") gibi metinler fiyat değildir.
+const sayisalFiyat = !satildi && typeof eser.fiyat === 'number' && eser.fiyat > 0
+  ? eser.fiyat
+  : null;
+
+const eserSema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'VisualArtwork',
+  name: baslik,
+  url: eserUrl,
+  image: `${SITE}${eser.ana_fotograf}`,
+  creator: sanatci,
+  artform: dil === 'tr' ? 'Resim' : 'Painting',
+  artMedium: dil === 'tr' ? 'Tuval üzerine yağlıboya' : 'Oil on canvas',
+  artworkSurface: dil === 'tr' ? 'Tuval' : 'Canvas',
+  dateCreated: String(eser.yil),
+  inLanguage: dil,
+  width:  { '@type': 'QuantitativeValue', value: eser.en,  unitCode: 'CMT' },
+  height: { '@type': 'QuantitativeValue', value: eser.boy, unitCode: 'CMT' },
+};
+
+if (eser.aciklama) eserSema.description = eser.aciklama;
+
+// Türkçe adı İngilizce sayfada da belirtelim: aynı eser olduğu anlaşılsın
+if (dil === 'en' && eser.baslik !== eser.baslik_en) {
+  eserSema.alternateName = eser.baslik;
+}
+
+eserSema.offers = {
+  '@type': 'Offer',
+  url: eserUrl,
+  availability: satildi
+    ? 'https://schema.org/SoldOut'
+    : 'https://schema.org/InStock',
+  seller: sanatci,
+  ...(sayisalFiyat
+    ? { price: sayisalFiyat, priceCurrency: 'TRY' }
+    : {}),
+};
+
+const yolSema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: etiket.anasayfa, item: kokUrl },
+    { '@type': 'ListItem', position: 2, name: etiket.eserler,  item: listeUrl },
+    { '@type': 'ListItem', position: 3, name: baslik },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(eserSema)} is:inline />
+<script type="application/ld+json" set:html={JSON.stringify(yolSema)} is:inline />
