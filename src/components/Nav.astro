@@ -27,11 +27,42 @@ const currentPath = Astro.url.pathname;
 const digerDil     = dil === 'tr' ? 'en' : 'tr';
 const digerDilLink = base + digerDilYolu(currentPath, digerDil);
 const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
+
+/**
+ * Menü yalnızca ana sayfada, tam ekran hero görselinin üzerinde saydam durur.
+ * Diğer sayfaların arka planı krem olduğu için saydam menü görünmez olur
+ * (krem yazı krem zemin üzerinde kalır). Bu yüzden orada baştan opak başlar.
+ */
+const temiz    = currentPath.replace(/\/$/, '');
+const heroVar  = temiz === '' || temiz === base || temiz === `${base}/en`;
+
+// Hero'suz sayfalarda JS hiç çalışmaz; renkler doğrudan burada verilir.
+// Hero'lu sayfada başlangıç rengi krem, kaydırınca JS koyuya çevirir.
+const logoRenk = heroVar ? 'text-cream' : 'text-ink';
+const linkRenk = heroVar ? 'text-cream/80' : 'text-muted';
+const ikonRenk = heroVar ? 'text-cream' : 'text-ink';
+const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-warm/40';
 ---
 
-<header id="site-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent">
+<header
+  id="site-nav"
+  data-hero={heroVar ? 'true' : 'false'}
+  class={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+    heroVar ? 'border-transparent' : 'bg-cream/95 backdrop-blur-sm border-warm/10'
+  }`}
+>
+  {/* Hero'nun üst şeridi açık renkli olabiliyor; menü yazısının okunması için
+      yukarıdan aşağı sönümlenen ince bir karartma. Ana sayfada, sayfa
+      başındayken görünür. */}
+  {heroVar && (
+    <div
+      id="nav-perde"
+      class="absolute inset-x-0 top-0 h-28 -z-10 pointer-events-none bg-gradient-to-b from-ink/70 via-ink/38 to-transparent transition-opacity duration-300"
+    ></div>
+  )}
+
   <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-    <a href={kok} class="font-serif text-xl tracking-wide transition-colors nav-logo">
+    <a href={kok} class={`font-serif text-xl tracking-wide transition-colors nav-logo ${logoRenk}`}>
       İlknur Gürcan
     </a>
 
@@ -42,7 +73,7 @@ const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
           <a
             href={link.href}
             class={`nav-link text-sm font-[400] tracking-widest uppercase transition-colors ${
-              currentPath.startsWith(link.href) ? 'text-gold' : ''
+              currentPath.startsWith(link.href) ? 'text-gold' : linkRenk
             }`}
           >
             {link.label}
@@ -52,7 +83,7 @@ const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
       <li>
         <a
           href={digerDilLink}
-          class="nav-dil text-xs font-[500] tracking-widest border px-2.5 py-1 transition-colors"
+          class={`nav-dil text-xs font-[500] tracking-widest border px-2.5 py-1 transition-colors ${dilRenk}`}
           aria-label={digerDil === 'en' ? 'Switch to English' : 'Türkçeye geç'}
         >
           {digerDilEtiket}
@@ -60,12 +91,24 @@ const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
       </li>
     </ul>
 
-    <!-- Mobile hamburger -->
-    <button id="mobile-menu-btn" class="md:hidden nav-icon" aria-label="Menü">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
+    <!-- Mobil: dil düğmesi + hamburger.
+         Dil düğmesi menünün içinde değil dışında; ona en çok ihtiyacı olan
+         kişi Türkçe okuyamayan kişi ve "Menü" yazan bir düğmeyi açması
+         beklenmemeli. -->
+    <div class="flex items-center gap-3 md:hidden">
+      <a
+        href={digerDilLink}
+        class={`nav-dil text-xs font-[500] tracking-widest border px-2.5 py-1 transition-colors ${dilRenk}`}
+        aria-label={digerDil === 'en' ? 'Switch to English' : 'Türkçeye geç'}
+      >
+        {digerDilEtiket}
+      </a>
+      <button id="mobile-menu-btn" class={`nav-icon ${ikonRenk}`} aria-label={dil === 'tr' ? 'Menü' : 'Menu'}>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
   </nav>
 
   <!-- Mobile menu -->
@@ -81,11 +124,6 @@ const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
           </a>
         </li>
       ))}
-      <li class="pt-2 border-t border-warm/10">
-        <a href={digerDilLink} class="text-sm tracking-widest uppercase text-warm hover:text-ink transition-colors">
-          {digerDil === 'en' ? 'English' : 'Türkçe'}
-        </a>
-      </li>
     </ul>
   </div>
 </header>
@@ -95,41 +133,54 @@ const digerDilEtiket = digerDil === 'en' ? 'EN' : 'TR';
   const menu = document.getElementById('mobile-menu');
   btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
 
-  // Scroll-aware nav: transparent + white text on hero, cream bg + dark text after
   const nav = document.getElementById('site-nav');
-  const logo = document.querySelector('.nav-logo') as HTMLElement | null;
-  const links = document.querySelectorAll<HTMLElement>('.nav-link:not(.text-gold)');
-  const icon = document.querySelector('.nav-icon') as HTMLElement | null;
-  const dilBtn = document.querySelector('.nav-dil') as HTMLElement | null;
 
-  function updateNav() {
-    const scrolled = window.scrollY > 60;
-    if (nav) {
-      nav.classList.toggle('bg-cream/95', scrolled);
-      nav.classList.toggle('backdrop-blur-sm', scrolled);
-      nav.classList.toggle('border-warm/10', scrolled);
-      nav.classList.toggle('border-transparent', !scrolled);
+  // Menü yalnızca ana sayfada saydam başlar. Diğer sayfalarda arka plan krem
+  // olduğu için saydam menü görünmez olurdu; oraya sunucu tarafında zaten opak
+  // stil basılıyor ve burada hiçbir şey yapmıyoruz.
+  if (nav?.dataset.hero === 'true') {
+    const perde  = document.getElementById('nav-perde');
+    const logo   = document.querySelector('.nav-logo') as HTMLElement | null;
+    const links  = document.querySelectorAll<HTMLElement>('.nav-link:not(.text-gold)');
+    const icon   = document.querySelector('.nav-icon') as HTMLElement | null;
+    // Masaüstü ve mobil için iki ayrı dil düğmesi var; ikisi de güncellenmeli
+    const dilBtnler = document.querySelectorAll<HTMLElement>('.nav-dil');
+
+    let sonDurum: boolean | null = null;
+
+    function guncelle() {
+      const kaydirildi = window.scrollY > 60;
+      if (kaydirildi === sonDurum) return;      // gereksiz sınıf işlemi yapma
+      sonDurum = kaydirildi;
+
+      nav!.classList.toggle('bg-cream/95', kaydirildi);
+      nav!.classList.toggle('backdrop-blur-sm', kaydirildi);
+      nav!.classList.toggle('border-warm/10', kaydirildi);
+      nav!.classList.toggle('border-transparent', !kaydirildi);
+
+      // Karartma perdesi yalnızca menü saydamken gerekli
+      perde?.classList.toggle('opacity-0', kaydirildi);
+
+      logo?.classList.toggle('text-ink', kaydirildi);
+      logo?.classList.toggle('text-cream', !kaydirildi);
+
+      links.forEach(l => {
+        l.classList.toggle('text-muted', kaydirildi);
+        l.classList.toggle('text-cream/80', !kaydirildi);
+      });
+
+      icon?.classList.toggle('text-ink', kaydirildi);
+      icon?.classList.toggle('text-cream', !kaydirildi);
+
+      dilBtnler.forEach(d => {
+        d.classList.toggle('text-muted', kaydirildi);
+        d.classList.toggle('border-warm/40', kaydirildi);
+        d.classList.toggle('text-cream/80', !kaydirildi);
+        d.classList.toggle('border-cream/40', !kaydirildi);
+      });
     }
-    if (logo) {
-      logo.classList.toggle('text-ink', scrolled);
-      logo.classList.toggle('text-cream', !scrolled);
-    }
-    links.forEach(l => {
-      l.classList.toggle('text-muted', scrolled);
-      l.classList.toggle('text-cream/80', !scrolled);
-    });
-    if (icon) {
-      icon.classList.toggle('text-ink', scrolled);
-      icon.classList.toggle('text-cream', !scrolled);
-    }
-    if (dilBtn) {
-      dilBtn.classList.toggle('text-muted', scrolled);
-      dilBtn.classList.toggle('border-warm/40', scrolled);
-      dilBtn.classList.toggle('text-cream/80', !scrolled);
-      dilBtn.classList.toggle('border-cream/40', !scrolled);
-    }
+
+    guncelle();
+    window.addEventListener('scroll', guncelle, { passive: true });
   }
-
-  updateNav();
-  window.addEventListener('scroll', updateNav, { passive: true });
 </script>

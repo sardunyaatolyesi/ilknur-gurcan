@@ -15,6 +15,9 @@ export default defineConfig({
   redirects: {
     '/eserler/la-cr-maill-re':   '/eserler/la-cremaillere',
     '/en/works/la-cr-maill-re':  '/en/works/la-cremaillere',
+    // Eser adı düzeltildi: Qurabiye -> Qrabiye
+    '/eserler/qurabiye':         '/eserler/qrabiye',
+    '/en/works/qurabiye':        '/en/works/qrabiye',
   },
 
   vite: {
