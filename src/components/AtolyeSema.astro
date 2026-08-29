@@ -6,8 +6,9 @@
  * burayı bir işletme olarak tanıyabilmesi için adresi, iletişim bilgilerini
  * ve sanatçıyı makine okunur biçimde bildirir. Ziyaretçi bunu görmez.
  *
- * Bilerek yazılmayan: çalışma saatleri. Ziyaret randevuyla olduğu için
- * sabit saat bildirmek yanıltıcı olur.
+ * Tür neden iki tane: burası bazen eserlerin sergilenip satıldığı bir galeri,
+ * bazen resim kursu verilen bir atölye olarak çalışıyor. JSON-LD birden fazla
+ * tür bildirmeye izin verir; ikisini birden yazmak gerçek duruma daha yakın.
  */
 interface Props {
   dil: 'tr' | 'en';
@@ -40,12 +41,12 @@ const sanatci = {
 
 const sema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': ['ArtGallery', 'EducationalOrganization'],
   '@id': `${SITE}/#atolye`,
   name: dil === 'tr' ? 'Sardunya Resim Atölyesi' : 'Sardunya Painting Studio',
   description: dil === 'tr'
-    ? 'Ressam İlknur Gürcan’ın Ankara Çayyolu’ndaki atölyesi. Özgün yağlıboya eserler ve resim kursları.'
-    : 'The Ankara studio of painter İlknur Gürcan. Original oil paintings and painting courses.',
+    ? 'Ressam İlknur Gürcan’ın Ankara Çayyolu’ndaki atölyesi. Özgün yağlıboya eserlerin sergilendiği ve satıldığı bir galeri, aynı zamanda resim kursu verilen bir atölye.'
+    : 'The Ankara studio of painter İlknur Gürcan. A gallery where original oil paintings are shown and sold, and a studio where painting courses are held.',
   url: dil === 'tr' ? `${SITE}/iletisim` : `${SITE}/en/contact`,
   image: `${SITE}/og-image.jpg`,
   telephone: '+905337136968',
@@ -72,8 +73,21 @@ const sema = {
     'https://www.instagram.com/ilknurgurcan_art',
     haritaLinki,          // Google İşletme kaydı
   ],
-  // Çalışma saati bilerek yazılmadı: Google kaydında saat tanımlı ama tam
-  // haftalık bilgi doğrulanmadı. Yanlış saat yazmak, hiç yazmamaktan kötü.
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '10:00',
+      closes: '17:00',
+    },
+    {
+      // Kapalı günü açıkça bildirmek, "saat bilgisi yok" görünmesini önler
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Sunday',
+      opens: '00:00',
+      closes: '00:00',
+    },
+  ],
 };
 ---
 
