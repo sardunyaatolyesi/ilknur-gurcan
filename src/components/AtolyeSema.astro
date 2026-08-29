@@ -6,9 +6,8 @@
  * burayı bir işletme olarak tanıyabilmesi için adresi, iletişim bilgilerini
  * ve sanatçıyı makine okunur biçimde bildirir. Ziyaretçi bunu görmez.
  *
- * Bilerek yazılmayanlar: çalışma saatleri (ziyaret randevuyla), coğrafi
- * koordinat (kesin konum doğrulanmadı). Uydurmak yerine boş bırakıldı;
- * yanlış bilgi hiç bilgi olmamasından kötüdür.
+ * Bilerek yazılmayan: çalışma saatleri. Ziyaret randevuyla olduğu için
+ * sabit saat bildirmek yanıltıcı olur.
  */
 interface Props {
   dil: 'tr' | 'en';
@@ -16,6 +15,13 @@ interface Props {
 
 const { dil } = Astro.props;
 const SITE = 'https://ilknurgurcan.com';
+
+// Atölyenin konumu (Google Haritalar'dan doğrulandı)
+const ENLEM  = 39.890875;
+const BOYLAM = 32.681322;
+
+const ADRES_METNI = 'Sardunya Resim Atölyesi, MESA Koru Sitesi Koru Çarşısı 2/A, Çayyolu, Ankara';
+const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADRES_METNI)}`;
 
 const sanatci = {
   '@type': 'Person',
@@ -53,6 +59,12 @@ const sema = {
     addressRegion: 'Ankara',
     addressCountry: 'TR',
   },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: ENLEM,
+    longitude: BOYLAM,
+  },
+  hasMap: haritaLinki,
   areaServed: { '@type': 'Country', name: 'Türkiye' },
   sameAs: ['https://www.instagram.com/ilknurgurcan_art'],
   // Ziyaret randevuyla olduğu için sabit çalışma saati bildirilmiyor
