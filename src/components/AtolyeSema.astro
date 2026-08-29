@@ -1,0 +1,63 @@
+---
+/**
+ * Atölyenin schema.org künyesi (JSON-LD) — iletişim sayfalarında kullanılır.
+ *
+ * Ne işe yarar: Google'ın "Çayyolu resim atölyesi" gibi yerel aramalarda
+ * burayı bir işletme olarak tanıyabilmesi için adresi, iletişim bilgilerini
+ * ve sanatçıyı makine okunur biçimde bildirir. Ziyaretçi bunu görmez.
+ *
+ * Bilerek yazılmayanlar: çalışma saatleri (ziyaret randevuyla), coğrafi
+ * koordinat (kesin konum doğrulanmadı). Uydurmak yerine boş bırakıldı;
+ * yanlış bilgi hiç bilgi olmamasından kötüdür.
+ */
+interface Props {
+  dil: 'tr' | 'en';
+}
+
+const { dil } = Astro.props;
+const SITE = 'https://ilknurgurcan.com';
+
+const sanatci = {
+  '@type': 'Person',
+  '@id': `${SITE}/#ilknur-gurcan`,
+  name: 'İlknur Gürcan',
+  jobTitle: dil === 'tr' ? 'Ressam' : 'Painter',
+  url: dil === 'tr' ? `${SITE}/hakkinda` : `${SITE}/en/about`,
+  image: `${SITE}/images/artist.jpg`,
+  nationality: { '@type': 'Country', name: 'Türkiye' },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: dil === 'tr' ? 'Bilkent Üniversitesi' : 'Bilkent University',
+  },
+  sameAs: ['https://www.instagram.com/ilknurgurcan_art'],
+};
+
+const sema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${SITE}/#atolye`,
+  name: dil === 'tr' ? 'Sardunya Resim Atölyesi' : 'Sardunya Painting Studio',
+  description: dil === 'tr'
+    ? 'Ressam İlknur Gürcan’ın Ankara Çayyolu’ndaki atölyesi. Özgün yağlıboya eserler ve resim kursları.'
+    : 'The Ankara studio of painter İlknur Gürcan. Original oil paintings and painting courses.',
+  url: dil === 'tr' ? `${SITE}/iletisim` : `${SITE}/en/contact`,
+  image: `${SITE}/og-image.jpg`,
+  telephone: '+905337136968',
+  email: 'ilknurgurcan06@gmail.com',
+  foundingDate: '2011',
+  founder: sanatci,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'MESA Koru Sitesi, Koru Çarşısı 2/A',
+    addressLocality: 'Çayyolu',
+    addressRegion: 'Ankara',
+    addressCountry: 'TR',
+  },
+  areaServed: { '@type': 'Country', name: 'Türkiye' },
+  sameAs: ['https://www.instagram.com/ilknurgurcan_art'],
+  // Ziyaret randevuyla olduğu için sabit çalışma saati bildirilmiyor
+  publicAccess: false,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(sema)} is:inline />
