@@ -3,6 +3,14 @@ import Layout from '../layouts/Layout.astro';
 
 const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi almak istiyorum.');
 
+// Harita bağlantısı. Gömülü harita (iframe) yerine bağlantı tercih edildi:
+// gömülü harita sayfa açılır açılmaz Google çerezi bırakır ve sayfayı
+// ağırlaştırır. Bağlantı ise ziyaretçiyi kendi harita uygulamasına götürür.
+// Daha kesin konum için Google Haritalar'daki "Paylaş" bağlantısı buraya
+// yapıştırılabilir.
+const ADRES = 'Sardunya Resim Atölyesi, MESA Koru Sitesi Koru Çarşısı 2/A, Çayyolu, Ankara';
+const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADRES)}`;
+
 // Web3Forms erişim anahtarı — web3forms.com'dan e-postayla gelir.
 // Değiştirmek için sadece bu satırı güncelleyin.
 const WEB3FORMS_ANAHTARI = '4637d97f-b1ac-49c5-ad13-b6c01d27909d';
@@ -77,13 +85,27 @@ const WEB3FORMS_ANAHTARI = '4637d97f-b1ac-49c5-ad13-b6c01d27909d';
         </div>
 
         <!-- Atölye -->
-        <div class="border border-warm/20 p-6">
+        <div class="border border-warm/20 p-6 hover:border-warm/50 transition-colors">
           <p class="text-xs text-muted tracking-widest uppercase mb-2">Atölye</p>
           <p class="font-serif text-xl text-ink font-light">Sardunya Resim Atölyesi</p>
-          <p class="text-muted text-sm mt-2 leading-relaxed">
+          <address class="text-muted text-sm mt-2 leading-relaxed not-italic">
             MESA Koru Sitesi, Koru Çarşısı 2/A<br/>
             Çayyolu — Ankara
-          </p>
+          </address>
+          <a
+            href={haritaLinki}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 mt-4 px-6 py-3 border border-warm/40 text-warm text-xs tracking-widest uppercase hover:border-warm hover:text-ink transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M17.657 16.657 13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0Z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+            </svg>
+            Haritada Aç
+          </a>
         </div>
       </div>
 
