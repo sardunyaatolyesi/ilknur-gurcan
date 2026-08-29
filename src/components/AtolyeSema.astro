@@ -52,11 +52,13 @@ const sema = {
   email: 'ilknurgurcan06@gmail.com',
   foundingDate: '2011',
   founder: sanatci,
+  // Adresin ayrıntıları Google İşletme kaydından doğrulandı
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'MESA Koru Sitesi, Koru Çarşısı 2/A',
-    addressLocality: 'Çayyolu',
+    streetAddress: 'MESA Koru Sitesi, Koru Çarşısı 2/A, Çayyolu',
+    addressLocality: 'Çankaya',
     addressRegion: 'Ankara',
+    postalCode: '06530',
     addressCountry: 'TR',
   },
   geo: {
@@ -70,8 +72,8 @@ const sema = {
     'https://www.instagram.com/ilknurgurcan_art',
     haritaLinki,          // Google İşletme kaydı
   ],
-  // Ziyaret randevuyla olduğu için sabit çalışma saati bildirilmiyor
-  publicAccess: false,
+  // Çalışma saati bilerek yazılmadı: Google kaydında saat tanımlı ama tam
+  // haftalık bilgi doğrulanmadı. Yanlış saat yazmak, hiç yazmamaktan kötü.
 };
 ---
 
