@@ -16,12 +16,12 @@ interface Props {
 const { dil } = Astro.props;
 const SITE = 'https://ilknurgurcan.com';
 
-// Atölyenin konumu (Google Haritalar'dan doğrulandı)
-const ENLEM  = 39.890875;
-const BOYLAM = 32.681322;
-
-const ADRES_METNI = 'Sardunya Resim Atölyesi, MESA Koru Sitesi Koru Çarşısı 2/A, Çayyolu, Ankara';
-const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADRES_METNI)}`;
+// Konum ve harita bağlantısı, atölyenin Google İşletme kaydından alındı.
+// cid=... biçimi kaydın kalıcı kimliğidir; uzun paylaşım bağlantılarındaki
+// takip parametrelerini içermez ve zamanla bozulmaz.
+const ENLEM  = 39.8907104;
+const BOYLAM = 32.6812903;
+const haritaLinki = 'https://www.google.com/maps?cid=8140269433359174058';
 
 const sanatci = {
   '@type': 'Person',
@@ -66,7 +66,10 @@ const sema = {
   },
   hasMap: haritaLinki,
   areaServed: { '@type': 'Country', name: 'Türkiye' },
-  sameAs: ['https://www.instagram.com/ilknurgurcan_art'],
+  sameAs: [
+    'https://www.instagram.com/ilknurgurcan_art',
+    haritaLinki,          // Google İşletme kaydı
+  ],
   // Ziyaret randevuyla olduğu için sabit çalışma saati bildirilmiyor
   publicAccess: false,
 };

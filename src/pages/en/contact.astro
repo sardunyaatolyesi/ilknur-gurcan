@@ -4,11 +4,11 @@ import AtolyeSema from '../../components/AtolyeSema.astro';
 
 const mesaj = encodeURIComponent('Hello, I would like to ask about a painting.');
 
-// Map link rather than an embedded map: an embed drops Google cookies as soon
-// as the page loads and adds considerable weight. A link sends the visitor to
-// their own maps app instead. Keep this in step with the Turkish page.
-const ADRES = 'Sardunya Resim Atölyesi, MESA Koru Sitesi Koru Çarşısı 2/A, Çayyolu, Ankara';
-const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADRES)}`;
+// Direct link to the studio's Google Business listing. The cid=... form is the
+// listing's permanent id and carries no tracking parameters. A link rather than
+// an embedded map: an embed drops Google cookies on page load and adds weight.
+// Keep this in step with the Turkish page and AtolyeSema.astro.
+const haritaLinki = 'https://www.google.com/maps?cid=8140269433359174058';
 
 // Web3Forms access key — same form as the Turkish page.
 const WEB3FORMS_ANAHTARI = '4637d97f-b1ac-49c5-ad13-b6c01d27909d';

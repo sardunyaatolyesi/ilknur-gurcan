@@ -4,13 +4,11 @@ import AtolyeSema from '../components/AtolyeSema.astro';
 
 const whatsappMesaj = encodeURIComponent('Merhaba, bir eser hakkında bilgi almak istiyorum.');
 
-// Harita bağlantısı. Gömülü harita (iframe) yerine bağlantı tercih edildi:
-// gömülü harita sayfa açılır açılmaz Google çerezi bırakır ve sayfayı
-// ağırlaştırır. Bağlantı ise ziyaretçiyi kendi harita uygulamasına götürür.
-// Daha kesin konum için Google Haritalar'daki "Paylaş" bağlantısı buraya
-// yapıştırılabilir.
-const ADRES = 'Sardunya Resim Atölyesi, MESA Koru Sitesi Koru Çarşısı 2/A, Çayyolu, Ankara';
-const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADRES)}`;
+// Atölyenin Google İşletme kaydına doğrudan bağlantı. cid=... biçimi kaydın
+// kalıcı kimliğidir; paylaşım bağlantılarındaki takip parametrelerini
+// içermez. Gömülü harita (iframe) yerine bağlantı tercih edildi: gömülü
+// harita sayfa açılır açılmaz Google çerezi bırakır ve sayfayı ağırlaştırır.
+const haritaLinki = 'https://www.google.com/maps?cid=8140269433359174058';
 
 // Web3Forms erişim anahtarı — web3forms.com'dan e-postayla gelir.
 // Değiştirmek için sadece bu satırı güncelleyin.
