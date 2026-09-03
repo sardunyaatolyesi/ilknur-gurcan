@@ -65,6 +65,8 @@ const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-
     <a href={kok} class={`font-serif text-xl tracking-wide transition-colors nav-logo ${logoRenk}`}>
       İlknur Gürcan
     </a>
+    {/* Logo ana sayfaya döner. Tıklanabilir olduğu belli olsun diye
+        global.css'te hover durumu tanımlı. */}
 
     <!-- Desktop menu -->
     <ul class="hidden md:flex items-center gap-8">
@@ -114,6 +116,18 @@ const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden bg-cream/95 backdrop-blur-sm border-t border-warm/10">
     <ul class="px-6 py-4 flex flex-col gap-4">
+      {/* Mobilde logonun tıklanabilirliği belli olmuyor (hover yok),
+          bu yüzden ana sayfa burada da açıkça yer alıyor. */}
+      <li>
+        <a
+          href={kok}
+          class={`text-sm tracking-widest uppercase transition-colors ${
+            heroVar ? 'text-gold' : 'text-muted hover:text-ink'
+          }`}
+        >
+          {t('nav.anasayfa')}
+        </a>
+      </li>
       {navLinks.map(link => (
         <li>
           <a

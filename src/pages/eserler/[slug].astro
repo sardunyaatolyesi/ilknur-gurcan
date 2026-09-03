@@ -32,7 +32,20 @@ const ayniKategoride = sirala(digerEserler.filter(e => e.kategori === eser.kateg
 const diger          = sirala(digerEserler.filter(e => e.kategori !== eser.kategori));
 const ilgiliEserler  = [...ayniKategoride, ...diger].slice(0, 3);
 
-const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser hakkında bilgi almak istiyorum.`);
+const mesajMetni    = `Merhaba, "${eser.baslik}" isimli eser hakkında bilgi almak istiyorum.`;
+const whatsappMesaj = encodeURIComponent(mesajMetni);
+
+/**
+ * mailto bağlantısı üretir.
+ *
+ * Konu ve gövde MUTLAKA kodlanmalı: boşluk, tırnak ve Türkçe karakterler
+ * ham hâlde bırakılırsa URL geçersiz olur ve e-posta istemcilerinin çoğu
+ * bağlantıyı ya ilk boşlukta keser ya da hiç açmaz.
+ */
+const epostaLinki = (konu: string) =>
+  'mailto:ilknurgurcan06@gmail.com'
+  + `?subject=${encodeURIComponent(konu)}`
+  + `&body=${encodeURIComponent(mesajMetni)}`;
 ---
 
 <Layout
@@ -131,7 +144,7 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
               Bilgi İste (WhatsApp)
             </a>
             <a
-              href={`mailto:ilknurgurcan06@gmail.com?subject=${eser.baslik} hakkında bilgi&body=${decodeURIComponent(whatsappMesaj)}`}
+              href={epostaLinki(`${eser.baslik} hakkında bilgi`)}
               class="w-full py-3 border border-warm/20 text-muted text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
             >
               E-posta Gönder
@@ -230,7 +243,7 @@ const whatsappMesaj = encodeURIComponent(`Merhaba, "${eser.baslik}" isimli eser 
           WhatsApp ile İletişime Geç
         </a>
         <a
-          href={`mailto:ilknurgurcan06@gmail.com?subject=${eser.baslik} satın alma&body=${decodeURIComponent(whatsappMesaj)}`}
+          href={epostaLinki(`${eser.baslik} satın alma`)}
           class="w-full py-3 border border-warm/30 text-warm text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
         >
           E-posta Gönder

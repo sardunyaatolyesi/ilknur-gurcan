@@ -36,9 +36,18 @@ const ayniKategoride = sirala(digerEserler.filter(e => e.kategori === eser.kateg
 const diger          = sirala(digerEserler.filter(e => e.kategori !== eser.kategori));
 const ilgiliEserler  = [...ayniKategoride, ...diger].slice(0, 3);
 
-const mesaj = encodeURIComponent(
-  `Hello, I would like to ask about the painting "${eser.baslik_en}".`,
-);
+const mesajMetni = `Hello, I would like to ask about the painting "${eser.baslik_en}".`;
+const mesaj = encodeURIComponent(mesajMetni);
+
+/**
+ * Builds a mailto link. Subject and body MUST be encoded: raw spaces, quotes
+ * and non-ASCII characters make the URL invalid, and most mail clients then
+ * either truncate it at the first space or refuse to open it at all.
+ */
+const epostaLinki = (konu: string) =>
+  'mailto:ilknurgurcan06@gmail.com'
+  + `?subject=${encodeURIComponent(konu)}`
+  + `&body=${encodeURIComponent(mesajMetni)}`;
 ---
 
 <Layout
@@ -132,7 +141,7 @@ const mesaj = encodeURIComponent(
               Enquire on WhatsApp
             </a>
             <a
-              href={`mailto:ilknurgurcan06@gmail.com?subject=${encodeURIComponent(eser.baslik_en + ' — enquiry')}&body=${decodeURIComponent(mesaj)}`}
+              href={epostaLinki(`${eser.baslik_en} - enquiry`)}
               class="w-full py-3 border border-warm/40 text-warm text-sm tracking-widest uppercase text-center hover:border-warm hover:text-ink transition-colors"
             >
               Enquire by Email
