@@ -6,7 +6,15 @@
   --color-cream: #FAF8F5;
   --color-ink: #1C1A18;
   --color-warm: #8B7355;
+  /* Altın iki tonlu:
+     --color-gold      koyu zeminlerde (hero, alt bilgi). Kontrast 7.75, sorunsuz.
+     --color-gold-koyu açık zeminlerde metin için. Açık altın krem üzerinde
+                       yalnızca 2.11 kontrast veriyor; erişilebilirlik eşiği 4.5.
+                       Aynı ton korunarak koyulaştırıldı: krem üzerinde 5.00,
+                       soft (#F0EDE8) üzerinde 4.54. Soft zemin daha koyu
+                       olduğu için belirleyici olan odur. */
   --color-gold: #C9A96E;
+  --color-gold-koyu: #846731;
   --color-soft: #F0EDE8;
   --color-muted: #6B6560;
 

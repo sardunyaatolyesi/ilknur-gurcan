@@ -87,5 +87,11 @@ export function formatFiyat(
   if (fiyat <= 0) {
     return dil === 'en' ? 'Price on request' : 'Fiyat için iletişime geçin';
   }
-  return '₺' + fiyat.toLocaleString('tr-TR');
+  // Basamak ayracı dile göre değişir: Türkçede 40.000, İngilizcede 40,000.
+  // İngilizce sayfada "40.000" yazmak kırk sanılmasına yol açar.
+  // İngilizcede ₺ sembolü yerine TRY kodu kullanılır; yabancı ziyaretçi
+  // sembolü tanımayabilir, kod ise kur araştırmasını kolaylaştırır.
+  return dil === 'tr'
+    ? '₺' + fiyat.toLocaleString('tr-TR')
+    : fiyat.toLocaleString('en-US') + ' TRY';
 }

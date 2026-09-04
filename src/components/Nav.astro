@@ -75,7 +75,9 @@ const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-
           <a
             href={link.href}
             class={`nav-link text-sm font-[400] tracking-widest uppercase transition-colors ${
-              currentPath.startsWith(link.href) ? 'text-gold' : linkRenk
+              currentPath.startsWith(link.href)
+                ? `nav-aktif ${heroVar ? 'text-gold' : 'text-gold-koyu'}`
+                : linkRenk
             }`}
           >
             {link.label}
@@ -122,7 +124,8 @@ const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-
         <a
           href={kok}
           class={`text-sm tracking-widest uppercase transition-colors ${
-            heroVar ? 'text-gold' : 'text-muted hover:text-ink'
+            // Mobil menü her zaman krem zeminli; açık altın orada okunmaz
+            heroVar ? 'text-gold-koyu' : 'text-muted hover:text-ink'
           }`}
         >
           {t('nav.anasayfa')}
@@ -155,7 +158,10 @@ const dilRenk  = heroVar ? 'text-cream/80 border-cream/40' : 'text-muted border-
   if (nav?.dataset.hero === 'true') {
     const perde  = document.getElementById('nav-perde');
     const logo   = document.querySelector('.nav-logo') as HTMLElement | null;
-    const links  = document.querySelectorAll<HTMLElement>('.nav-link:not(.text-gold)');
+    // Bulunulan sayfanın bağlantısı altın kalır; kaydırmayla rengi değişmesin.
+    // Sınıf adı yerine .nav-aktif işaretine bakılıyor: altın rengi zemine göre
+    // iki farklı sınıf olabildiği için ada bağlı kontrol kırılgan olurdu.
+    const links  = document.querySelectorAll<HTMLElement>('.nav-link:not(.nav-aktif)');
     const icon   = document.querySelector('.nav-icon') as HTMLElement | null;
     // Masaüstü ve mobil için iki ayrı dil düğmesi var; ikisi de güncellenmeli
     const dilBtnler = document.querySelectorAll<HTMLElement>('.nav-dil');
