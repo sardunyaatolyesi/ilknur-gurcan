@@ -2,7 +2,7 @@
 
 Son güncelleme: **26.08.2026**
 
-Güncel yapılacaklar listesi `../Yapılacaklar-WebSitesi.xlsx` dosyasında tutulur;
+Güncel yapılacaklar listesi OneDrive'daki `WebSitesi\Yapılacaklar-WebSitesi.xlsx` dosyasında tutulur;
 bu belge genel resmi özetler.
 
 ---

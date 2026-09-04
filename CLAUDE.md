@@ -34,6 +34,12 @@ Arayüz metinleri Türkçe ve İngilizce.
 Eserler.xlsx  →  scripts/eserler-uret.py  →  src/data/eserler.ts
 ```
 
+Kaynak Excel dosyaları **depoda değil, OneDrive'da**:
+`%OneDrive%/Documents/İlknur/WebSitesi/`. Yerlerini `scripts/kaynak.py`
+çözer (ortam değişkeninden; sabit yol yazılmaz). Depo yerel diskte kalır —
+OneDrive'a konursa `node_modules` ve `.git` senkronizasyonu çakışma üretir;
+kodun yedeği zaten GitHub'da.
+
 `src/data/eserler.ts` **otomatik üretilir; elle düzenlemeyin.** İçerik
 değişikliği Excel'de yapılır, betik yeniden çalıştırılır. Betik `Eser` tipini,
 `eserler` dizisini ve `formatFiyat()` yardımcısını da yazar.
@@ -89,4 +95,5 @@ Alan adı `ilknurgurcan.com`, DNS Cloudflare'de.
 - `README.md` — projeye genel bakış
 - `ICERIK-GUNCELLEME.md` — içerik güncelleme rehberi (kod bilmeyenler için)
 - `ROADMAP.md` — yapılanlar ve bekleyenler
-- `../Yapılacaklar-WebSitesi.xlsx` — madde madde iş listesi ve gerekçeler
+- `%OneDrive%/Documents/İlknur/WebSitesi/Yapılacaklar-WebSitesi.xlsx` —
+  madde madde iş listesi ve gerekçeler

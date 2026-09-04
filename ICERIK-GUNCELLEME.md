@@ -5,9 +5,42 @@ Bu belge, siteyi güncel tutmak için gereken işleri anlatır. Çoğu iş Excel
 
 ---
 
+## Dosyalar nerede
+
+İki klasör var. Ayrı durmalarının nedeni aşağıda.
+
+**Kaynak dosyalar — OneDrive'da** (`Belgeler\İlknur\WebSitesi\`)
+
+| | |
+| :-- | :-- |
+| `Eserler.xlsx` | Eser listesi |
+| `Sergiler.xlsx` | Sergi listesi |
+| `Yapılacaklar-WebSitesi.xlsx` | İş listesi |
+| `Depo\` | Excel'in eski sürümleri |
+| `Resimler` (kısayol) | Eserlerin yüksek çözünürlüklü asılları |
+| `Web Sitesi Kodu` (kısayol) | Aşağıdaki klasöre gider |
+
+Bunlar OneDrive'da çünkü başka hiçbir yerde kopyaları yok. OneDrive
+otomatik yedekliyor.
+
+**Kod — yerel diskte** (`Belgeler\Burak\SardunyaWebPage\ilknur-gurcan\`)
+
+Kodun yedeği GitHub'da; ayrıca sürüm geçmişi de orada tutuluyor, yani
+OneDrive'dan daha iyi korunuyor. OneDrive'a taşınmıyor çünkü klasör 11
+binden fazla dosya içeriyor (`node_modules`, `.git`) ve OneDrive bunları
+her kurulumda yeniden senkronlamaya çalışıp hem yavaşlıyor hem de dosya
+kilidi çakışması üretiyor.
+
+İki klasörde de diğerine giden bir kısayol var; hangisinden başlarsanız
+başlayın ötekine ulaşırsınız.
+
+> Betikler Excel'i OneDrive'da kendiliğinden bulur; yol yazmanız gerekmez.
+
+---
+
 ## Eserler
 
-Eserlerin tek kaynağı `SardunyaWebPage/Eserler.xlsx` dosyasıdır.
+Eserlerin tek kaynağı OneDrive'daki `WebSitesi\Eserler.xlsx` dosyasıdır.
 Site verisi (`src/data/eserler.ts`) bu dosyadan **otomatik üretilir**;
 o dosyayı elle düzenlemeyin, yaptığınız değişiklik bir sonraki üretimde silinir.
 
@@ -57,7 +90,7 @@ Böylece kayıt durur ama sitede görünmez.
 
 ## Sergiler
 
-Sergilerin kaynağı `SardunyaWebPage/Sergiler.xlsx` dosyasıdır.
+Sergilerin kaynağı OneDrive'daki `WebSitesi\Sergiler.xlsx` dosyasıdır.
 `src/data/sergiler.ts` bundan otomatik üretilir; elle düzenlemeyin.
 
 ### Excel sütunları

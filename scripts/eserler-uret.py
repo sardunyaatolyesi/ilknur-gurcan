@@ -5,9 +5,10 @@ Eserler.xlsx dosyasından src/data/eserler.ts üretir.
 Kullanım (proje kökünden):
     python scripts/eserler-uret.py
 
-Excel dosyası proje klasörünün bir üstünde beklenir:
-    SardunyaWebPage/Eserler.xlsx
-    SardunyaWebPage/ilknur-gurcan/   <- proje kökü
+Excel dosyası OneDrive'da tutulur (yedeklensin diye):
+    OneDrive/Documents/İlknur/WebSitesi/Eserler.xlsx
+
+Yerini scripts/kaynak.py çözer; eski konum (deponun bir üstü) da destekleniyor.
 
 Sütunlar başlık adıyla bulunur, sıraları değişebilir. Beklenen başlıklar:
     Dosya Adı, Boyutlar (En x Boy cm), Yıl, Kategori, Fiyat (TL), Durum,
@@ -22,6 +23,8 @@ import sys
 import unicodedata
 from pathlib import Path
 
+from kaynak import excel_yolu   # aynı klasördeki yardımcı
+
 # Windows konsolu varsayılan olarak cp1254 kullanır; Türkçe olmayan
 # karakterlerde (→ gibi) çökmemesi için çıktıyı UTF-8'e sabitle.
 try:
@@ -35,7 +38,7 @@ except ImportError:
     sys.exit("openpyxl kurulu değil.  Kurulum:  pip install openpyxl")
 
 KOK  = Path(__file__).resolve().parent.parent
-XLSX = KOK.parent / "Eserler.xlsx"
+XLSX = excel_yolu("Eserler.xlsx", KOK)
 CIKTI = KOK / "src" / "data" / "eserler.ts"
 
 # Türkçe harfleri slug için sadeleştir

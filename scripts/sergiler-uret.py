@@ -5,8 +5,10 @@ Sergiler.xlsx dosyasından src/data/sergiler.ts üretir.
 Kullanım (proje kökünden):
     python scripts/sergiler-uret.py
 
-Excel proje klasörünün bir üstünde beklenir:
-    SardunyaWebPage/Sergiler.xlsx
+Excel dosyası OneDrive'da tutulur (yedeklensin diye):
+    OneDrive/Documents/İlknur/WebSitesi/Sergiler.xlsx
+
+Yerini scripts/kaynak.py çözer; eski konum (deponun bir üstü) da destekleniyor.
 
 'Göster/Gizle' sütunu 'Gizle' olan sergiler siteye çıkmaz; yalnızca sayılır
 ve sayfada "çok sayıda karma sergi" ifadesiyle temsil edilir.
@@ -15,6 +17,8 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
+
+from kaynak import excel_yolu   # aynı klasördeki yardımcı
 
 # Windows konsolu varsayılan olarak cp1254 kullanır; Türkçe olmayan
 # karakterlerde (→ gibi) çökmemesi için çıktıyı UTF-8'e sabitle.
@@ -29,7 +33,7 @@ except ImportError:
     sys.exit("openpyxl kurulu değil.  Kurulum:  pip install openpyxl")
 
 KOK   = Path(__file__).resolve().parent.parent
-XLSX  = KOK.parent / "Sergiler.xlsx"
+XLSX  = excel_yolu("Sergiler.xlsx", KOK)
 CIKTI = KOK / "src" / "data" / "sergiler.ts"
 
 AY_TR = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",

@@ -5,5 +5,9 @@ dist/
 .env.*
 *.local
 
-# Excel kaynak dosyalari depoda tutulmaz
+# Excel kaynak dosyalari depoda tutulmaz.
+# Asillari OneDrive'da: %OneDrive%/Documents/Ilknur/WebSitesi/
 *.xlsx
+
+# Python onbellegi (scripts/ icindeki modul importundan olusur)
+__pycache__/

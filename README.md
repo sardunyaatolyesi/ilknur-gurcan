@@ -57,7 +57,8 @@ ilknur-gurcan/
 │   ├── robots.txt
 │   └── google…html        Search Console doğrulaması (SİLMEYİN)
 ├── scripts/
-│   └── eserler-uret.py    Excel → eserler.ts dönüştürücü
+│   ├── eserler-uret.py    Excel → eserler.ts dönüştürücü
+│   └── kaynak.py          Excel dosyalarının yerini bulur (OneDrive)
 ├── src/
 │   ├── components/        Nav, Footer, EserKart, EserSema
 │   ├── data/eserler.ts    Eser verisi (OTOMATİK ÜRETİLİR)
@@ -76,4 +77,15 @@ ilknur-gurcan/
 - **[ROADMAP.md](ROADMAP.md)** — Yapılanlar ve bekleyen işler.
 - **[CLAUDE.md](CLAUDE.md)** — Claude Code için teknik notlar.
 
-Yapılacak işlerin güncel listesi `../Yapılacaklar-WebSitesi.xlsx` dosyasında tutulur.
+## Dosyalar nerede
+
+Kaynak dosyalar (Excel'ler, eserlerin yüksek çözünürlüklü asılları) **OneDrive'da**
+tutulur: `Belgeler\İlknur\WebSitesi\`. Başka kopyaları olmadığı için orada; OneDrive
+yedekliyor. Betikler Excel'i kendiliğinden bulur.
+
+Kod ise yerel diskte kalır. Yedeği GitHub'da — sürüm geçmişiyle birlikte, yani
+OneDrive'dan daha iyi korunuyor. OneDrive'a taşınmaz: `node_modules` ve `.git`
+on binlerce dosya demek, senkronizasyon hem yavaşlar hem derleme sırasında dosya
+kilidi çakışması üretir. İki klasörde de diğerine giden kısayol var.
+
+Yapılacak işlerin güncel listesi `WebSitesi\Yapılacaklar-WebSitesi.xlsx` dosyasındadır.
