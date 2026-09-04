@@ -14,6 +14,8 @@ Tümü `ilknur-gurcan/` kökünden:
 | `npm run preview` | Üretilmiş siteyi yerelde açar |
 | `npm run astro check` | `.astro` dosyalarında tip denetimi |
 | `python scripts/eserler-uret.py` | `Eserler.xlsx` → `src/data/eserler.ts` |
+| `python scripts/haftalik-kontrol.py` | Excel değişmiş mi + fiyatı eskiyen eserler (yayına almaz) |
+| `python scripts/haftalik-kontrol.py --yayinla` | Kontroller geçerse derler, commit'ler, push'lar |
 
 Test paketi ve lint betiği yok. Node.js ≥ 22.12 gerekir (Astro 6 şartı).
 
@@ -47,6 +49,23 @@ değişikliği Excel'de yapılır, betik yeniden çalıştırılır. Betik `Eser
 Excel'de **`Durum` başlığı iki sütunda** var (G: satış durumu, K: not).
 Betik ilk sütunu (G) kullanır ve uyarı basar. Sütunları başlık adıyla bulur,
 sıra değişebilir.
+
+### Haftalık kontrol
+
+`scripts/haftalik-kontrol.py` üretim betiklerini çalıştırır, çıktıyı git'teki
+sürümle karşılaştırır, mantık kontrollerinden geçirir ve **ürettiği dosyaları
+geri alır**. Çalışma dizinine dokunmaz; yayına alma `--yayinla` ile ayrı adımdır.
+
+Kontroller (`kontroller()`): eser sayısında %20'den fazla düşüş, üçten fazla
+satıldı→satılabilir dönüşü (Ağustos 2026'daki `Durum` sütunu hatasının imzası),
+üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanması, boş başlık.
+
+Fiyat geçmişi ayrı bir dosyada tutulmaz; `eserler.ts`'in git geçmişinden
+çıkarılır. Deponun başlangıcı (2026-08-24) öncesi bilinmediği için o tarihe
+dayanan süreler **alt sınırdır** ve raporda "(en az)" diye işaretlenir.
+
+Zamanlanmış görev: `sardunya-haftalik-kontrol`, pazartesi 09:00, yerelde çalışır
+(Excel OneDrive'da olduğu için bulut ajanı bu işi yapamaz).
 
 ### Çoklu dil
 

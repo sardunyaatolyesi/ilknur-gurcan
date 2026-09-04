@@ -46,6 +46,7 @@ Tümü proje kökünden (`ilknur-gurcan/`) çalıştırılır:
 | `npm run preview` | Üretilmiş siteyi yerelde açar |
 | `npm run astro check` | TypeScript hatalarını denetler |
 | `python scripts/eserler-uret.py` | Excel'den eser verisini üretir |
+| `python scripts/haftalik-kontrol.py` | Excel değişmiş mi, fiyatı eskiyen eser var mı |
 
 ## Klasör yapısı
 
@@ -57,8 +58,9 @@ ilknur-gurcan/
 │   ├── robots.txt
 │   └── google…html        Search Console doğrulaması (SİLMEYİN)
 ├── scripts/
-│   ├── eserler-uret.py    Excel → eserler.ts dönüştürücü
-│   └── kaynak.py          Excel dosyalarının yerini bulur (OneDrive)
+│   ├── eserler-uret.py       Excel → eserler.ts dönüştürücü
+│   ├── haftalik-kontrol.py   Haftalık değişiklik ve fiyat kontrolü
+│   └── kaynak.py             Excel dosyalarının yerini bulur (OneDrive)
 ├── src/
 │   ├── components/        Nav, Footer, EserKart, EserSema
 │   ├── data/eserler.ts    Eser verisi (OTOMATİK ÜRETİLİR)
