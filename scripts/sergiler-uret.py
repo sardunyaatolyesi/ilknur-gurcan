@@ -13,9 +13,10 @@ Yerini scripts/kaynak.py çözer; eski konum (deponun bir üstü) da destekleniy
 'Göster/Gizle' sütunu 'Gizle' olan sergiler siteye çıkmaz; yalnızca sayılır
 ve sayfada "çok sayıda karma sergi" ifadesiyle temsil edilir.
 """
+import os
 import re
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 from kaynak import excel_yolu   # aynı klasördeki yardımcı
@@ -135,6 +136,51 @@ def tam_tarih(bas, bit, dil):
     return f"{bd} {aylar[ba-1]} {by}{ayrac}{ed} {aylar[ea-1]} {ey}"
 
 
+def bugun_kabul() -> date:
+    """
+    Hesaplamada kullanılacak 'bugün'.
+
+    SERGI_BUGUN ortam değişkeni verilirse (YYYY-AA-GG) onu kullanır. İki işe
+    yarıyor: sergi bittiğinde sitenin nasıl görüneceğine önden bakmak, ve bu
+    davranışı test edebilmek. Normal kullanımda ayarlanmaz.
+    """
+    s = os.environ.get("SERGI_BUGUN", "").strip()
+    if not s:
+        return date.today()
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").date()
+    except ValueError:
+        sys.exit(f"HATA: SERGI_BUGUN geçersiz: {s!r}. Biçim: YYYY-AA-GG")
+
+
+def sergi_durumu(bas, bit) -> str:
+    """
+    Serginin durumunu TARİHTEN hesaplar: 'yaklasan' | 'devam' | 'gecmis'.
+
+    Excel'deki 'Durum' sütunu artık okunmuyor. Elle yazılan bir kelimeye
+    bakmak, sergi bittikten sonra da sitede "Yaklaşan" görünmesi demekti.
+
+    DİKKAT: Site statik üretiliyor; buradaki "bugün" sayfanın DERLENDİĞİ
+    gündür, ziyaretçinin takvimi değil. Tarih sınırı geçtiğinde site yeniden
+    derlenmelidir — bunu haftalık kontrol görevi yakalar
+    (scripts/haftalik-kontrol.py).
+
+    Kurallar:
+      - Yalnızca yıl yazılmışsa (2018, eski kayıtların tamamı) → geçmiş
+      - Bitiş boşsa tek günlük sayılır, bitiş = başlangıç
+    """
+    if not bas or not bas[0]:
+        return "gecmis"
+    baslangic = date(bas[2], bas[1], bas[0])
+    bitis = date(bit[2], bit[1], bit[0]) if (bit and bit[0]) else baslangic
+    bugun = bugun_kabul()
+    if bugun < baslangic:
+        return "yaklasan"
+    if bugun <= bitis:
+        return "devam"
+    return "gecmis"
+
+
 def donem(bas, dil):
     aylar = AY_TR if dil == "tr" else AY_EN
     if not bas:
@@ -157,8 +203,9 @@ def main() -> int:
 
     oku = lambda r, ad: (ws.cell(row=r, column=sut[ad]).value if ad in sut else None)
 
-    yaklasan, gecmis = [], []
+    yaklasan, devam, gecmis = [], [], []
     gizli = {}
+    uyusmayan = []          # Excel'deki 'Durum' ile hesaplanan durum farklıysa
 
     for r in range(2, ws.max_row + 1):
         baslik = oku(r, "Sergi Adı")
@@ -199,12 +246,20 @@ def main() -> int:
             "not_en": NOT_EN.get(notu, notu),
         }
 
-        if str(oku(r, "Durum") or "").strip().lower().startswith("yaklaş"):
-            yaklasan.append(kayit)
-        else:
-            gecmis.append(kayit)
+        durum = sergi_durumu(bas, bit)
+        kayit["durum"] = durum
+
+        # Excel'deki 'Durum' sütunu artık kullanılmıyor ama sessizce
+        # eskimesin diye uyuşmazlık bildiriliyor.
+        yazili = str(oku(r, "Durum") or "").strip().lower()
+        beklenen = {"yaklasan": "yaklaş", "devam": "devam", "gecmis": "geçmiş"}[durum]
+        if yazili and not yazili.startswith(beklenen):
+            uyusmayan.append((baslik, str(oku(r, "Durum")).strip(), durum))
+
+        {"yaklasan": yaklasan, "devam": devam, "gecmis": gecmis}[durum].append(kayit)
 
     yaklasan.sort(key=lambda s: s["yil"])
+    devam.sort(key=lambda s: s["yil"])
     gecmis.sort(key=lambda s: s["yil"], reverse=True)
 
     def blok(ad, liste):
@@ -230,6 +285,7 @@ def main() -> int:
   donem: string;      // "Aralık 2026"
   donem_en: string;
   yil: string;        // "2018" veya "2011–12"
+  durum: 'yaklasan' | 'devam' | 'gecmis';  // tarihten hesaplanır
   not?: string;
   not_en?: string;
 }}
@@ -239,6 +295,10 @@ def main() -> int:
 // Kaynak: Sergiler.xlsx    Üretim: python scripts/sergiler-uret.py
 // ---------------------------------------------------------------------------
 
+// Durum, üretim anındaki tarihe göre hesaplanır. Site statik olduğu için
+// tarih sınırı geçtiğinde yeniden üretilmesi gerekir; haftalık kontrol
+// görevi bunu yakalayıp yayına alır.
+{blok("devamEdenSergiler", devam)}
 {blok("yaklasanSergiler", yaklasan)}
 {blok("gecmisSergiler", gecmis)}
 /** Listeye alınmayan ('Gizle' işaretli) karma sergi sayısı. */
@@ -246,7 +306,8 @@ export const gizliSergiSayisi = {toplamGizli};
 """
     CIKTI.write_text(icerik, encoding="utf-8")
 
-    print(f"{CIKTI.relative_to(KOK)} yazıldı.")
+    print(f"{CIKTI.relative_to(KOK)} yazıldı.  (durum {bugun_kabul():%d.%m.%Y} tarihine göre)")
+    print(f"  Devam eden: {len(devam)}")
     print(f"  Yaklaşan : {len(yaklasan)}")
     print(f"  Geçmiş   : {len(gecmis)}")
     print(f"  Gizlenen : {toplamGizli}  {gizli if gizli else ''}")
@@ -255,10 +316,17 @@ export const gizliSergiSayisi = {toplamGizli};
         turler[s["tur"]] = turler.get(s["tur"], 0) + 1
     print(f"  Geçmiş tür dağılımı: {turler}")
 
+    if uyusmayan:
+        print(f"  NOT: Excel'deki 'Durum' sütunu {len(uyusmayan)} satırda hesaplananla "
+              f"uyuşmuyor. Sütun artık okunmuyor, site tarihe göre çalışıyor; "
+              f"isterseniz Excel'i düzeltebilirsiniz:")
+        for ad, yazan, hesaplanan in uyusmayan:
+            print(f"       {ad}: Excel'de '{yazan}', hesaplanan '{hesaplanan}'")
+
     # İngilizce karşılığı bulunamayanlar Türkçe kalır; sessizce geçmesin
-    cevrilmemis = sorted({s["baslik"] for s in yaklasan + gecmis
-                          if s["baslik"] not in AD_EN})
-    cevrilmemisMekan = sorted({s["mekan"] for s in yaklasan + gecmis
+    tum = yaklasan + devam + gecmis
+    cevrilmemis = sorted({s["baslik"] for s in tum if s["baslik"] not in AD_EN})
+    cevrilmemisMekan = sorted({s["mekan"] for s in tum
                                if s["mekan"] and s["mekan"] not in MEKAN_EN})
     if cevrilmemis:
         print(f"  UYARI: İngilizce adı olmayan sergi ({len(cevrilmemis)}): {cevrilmemis}")

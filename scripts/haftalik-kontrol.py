@@ -20,7 +20,13 @@ bilinçli bir adımdır; Excel'de yapılmış bir hatanın kimse bakmadan siteye
 çıkmasını istemiyoruz (Ağustos 2026'da Excel'deki çift 'Durum' sütunu
 yüzünden 21 satılmış eser satıştaymış gibi üretilmişti).
 
-Çıkış kodları:  0 değişiklik yok · 10 değişiklik var · 20 kontrol takıldı · 1 hata
+Çıkış kodları:
+    0  değişiklik yok
+   10  değişiklik var, kontroller geçti — onay bekliyor
+   15  değişikliğin tek sebebi takvimin ilerlemesi (sergi başladı/bitti).
+       Excel'de bir şey değişmemiş, onay aranmadan yayına alınabilir.
+   20  değişiklik var ama mantık kontrolü takıldı
+    1  hata
 """
 import argparse
 import re
@@ -41,7 +47,7 @@ VERI = ["src/data/eserler.ts", "src/data/sergiler.ts"]
 ESKIME_GUN = 90
 
 # Çıkış kodları
-YOK, VAR, TAKILDI, HATA = 0, 10, 20, 1
+YOK, VAR, TARIH, TAKILDI, HATA = 0, 10, 15, 20, 1
 
 
 # --------------------------------------------------------------------------
@@ -113,6 +119,9 @@ def sergileri_coz(kaynak: str) -> dict[str, dict]:
     liste = ""
     for satir in kaynak.splitlines():
         s = satir.strip()
+        if s.startswith("export const devamEdenSergiler"):
+            liste = "devam ediyor"
+            continue
         if s.startswith("export const yaklasanSergiler"):
             liste = "yaklaşan"
             continue
@@ -163,11 +172,13 @@ def sergi_kontrolleri(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list
         uyari.append(f"Sergi sayısı {len(onceki)} → {len(simdiki)}. Beşte birden fazlası "
                      f"kaybolmuş; Excel'de satır silinmiş ya da toplu 'Gizle' yapılmış olabilir.")
 
-    # Yaklaşandan geçmişe düşmek olağan (sergi biter). Tersi olağan değil.
+    # Takvim ileri akar: yaklaşan → devam → geçmiş. Ters yöndeki her geçiş
+    # ancak Excel'de tarih değiştirilmişse olur ve büyük ihtimalle yıl hatasıdır.
+    sira = {"yaklaşan": 0, "devam ediyor": 1, "geçmiş": 2}
     geri = [b for b in onceki.keys() & simdiki.keys()
-            if onceki[b]["liste"] == "geçmiş" and simdiki[b]["liste"] == "yaklaşan"]
+            if sira.get(simdiki[b]["liste"], 9) < sira.get(onceki[b]["liste"], 9)]
     if geri:
-        uyari.append(f"Geçmişteki sergi yeniden 'yaklaşan' oldu: {', '.join(geri)}. "
+        uyari.append(f"Sergi takvimde geriye gitti: {', '.join(geri)}. "
                      f"Tarih alanında yıl yanlış girilmiş olabilir.")
 
     for b, e in sorted(simdiki.items()):
@@ -175,6 +186,36 @@ def sergi_kontrolleri(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list
             uyari.append(f"{b}: tarih alanı boş.")
 
     return uyari
+
+
+def sadece_tarih_gecisi(eser_ozet: list[str],
+                        onceki: dict[str, dict],
+                        simdiki: dict[str, dict]) -> bool:
+    """
+    Değişikliğin tek sebebi takvimin ilerlemesi mi?
+
+    Sergi durumu artık tarihten hesaplanıyor (sergiler-uret.py). Sergi bittiği
+    gün Excel'de hiçbir şey değişmemiş olsa da üretilen dosya değişir. Bu
+    durumda yayına almak güvenlidir: ortada yeni girilmiş bir veri yok,
+    dolayısıyla yanlış girilmiş olma ihtimali de yok.
+
+    Sergi eklenip çıkarılmışsa, herhangi bir alanı değişmişse ya da takvimde
+    geriye gidiş varsa False döner — o zaman insan bakmalı.
+    """
+    if eser_ozet or onceki.keys() != simdiki.keys():
+        return False
+
+    sira = {"yaklaşan": 0, "devam ediyor": 1, "geçmiş": 2}
+    ilerleyen = False
+    for b in onceki:
+        a, y = onceki[b], simdiki[b]
+        if any(a[ad] != y[ad] for ad in ("tur", "mekan", "sehir", "tarih", "not")):
+            return False
+        if a["liste"] != y["liste"]:
+            if sira.get(y["liste"], 9) <= sira.get(a["liste"], 9):
+                return False          # geriye gidiş: takvimle açıklanamaz
+            ilerleyen = True
+    return ilerleyen
 
 
 def fiyat_yaz(v) -> str:
@@ -411,6 +452,12 @@ def main() -> int:
             for u in uyarilar:
                 print(f"  TAKILDI  {u}")
             sonuc = TAKILDI
+        elif sadece_tarih_gecisi(eser_ozet, onceki_s, simdiki_s):
+            print("  Tümü geçti.")
+            print("\n  Değişikliğin tek sebebi takvimin ilerlemesi: Excel'de hiçbir şey")
+            print("  değişmemiş, yalnızca serginin durumu tarihe göre güncellenmiş.")
+            print("  Yanlış veri girme riski yok; onay aranmadan yayına alınabilir.")
+            sonuc = TARIH
         else:
             print("  Tümü geçti.")
             sonuc = VAR
@@ -440,6 +487,9 @@ def main() -> int:
         print("  Kontroller geçti, yayına alınıyor...")
         yayinla(ozet)
         return sonuc
+    elif sonuc == TARIH:
+        print("  Sergi takvimi ilerlemiş. Onay gerekmiyor, yayına alınabilir:")
+        print("  python scripts/haftalik-kontrol.py --yayinla")
     else:
         print("  Değişiklik yayına HAZIR ama alınmadı.")
         print("  Onaylıyorsanız:  python scripts/haftalik-kontrol.py --yayinla")
