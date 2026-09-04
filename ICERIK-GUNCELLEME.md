@@ -130,6 +130,29 @@ Böylece kayıt durur ama sitede görünmez.
 ## Sergiler
 
 Sergilerin kaynağı OneDrive'daki `WebSitesi\Sergiler.xlsx` dosyasıdır.
+
+### Yaklaşan / Devam eden / Geçmiş — elle güncellemeyin
+
+Serginin hangi başlık altında görüneceği **başlangıç ve bitiş tarihinden
+kendiliğinden hesaplanır**:
+
+| Tarih durumu | Sitede |
+| :-- | :-- |
+| Başlangıç henüz gelmemiş | Yaklaşan Sergiler |
+| Bugün başlangıç ile bitiş arasında | **Devam Eden Sergiler** |
+| Bitiş geçmiş | Geçmiş Sergiler |
+| Bitiş boş bırakılmış | Tek günlük sayılır |
+| Sadece yıl yazılmış (2018 gibi) | Geçmiş Sergiler |
+
+Excel'deki **"Durum" sütunu artık okunmuyor.** Silmeyin — betik, sizin
+yazdığınızla hesapladığını karşılaştırıp uyuşmazsa haber veriyor.
+
+> **Neden kendiliğinden güncellenmiyor?** Site statik: sayfalar önceden
+> üretilip yayınlanıyor. Sergi bittiği gün sitenin yeniden üretilmesi gerekir.
+> Haftalık kontrol bunu yakalar ve **onay sormadan** yayına alır — Excel'de bir
+> şey değişmediği, sadece takvim ilerlediği için. Yani bir sergi bittiğinde
+> sitede en fazla bir hafta eski görünebilir.
+
 `src/data/sergiler.ts` bundan otomatik üretilir; elle düzenlemeyin.
 
 ### Excel sütunları

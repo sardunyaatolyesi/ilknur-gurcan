@@ -64,9 +64,29 @@ imzası), üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanma
 boş başlık.
 
 Sergi kontrolleri (`sergi_kontrolleri()`): sergi sayısında %20'den fazla düşüş
-(toplu `Gizle` ya da silinmiş satır), geçmiş→yaklaşan geri dönüşü (tarihte yıl
+(toplu `Gizle` ya da silinmiş satır), takvimde geriye gidiş (tarihte yıl
 hatası), boş tarih. Sergilerin slug'ı yok; fark başlık anahtarıyla çıkarılıyor,
 başlık değişirse "çıkarıldı + yeni" olarak görünür.
+
+**Çıkış kodu 15** (`sadece_tarih_gecisi()`): değişikliğin tek sebebi takvimin
+ilerlemesi — sergi durumu tarihten hesaplandığı için Excel değişmese de dosya
+değişir. Yeni girilmiş veri olmadığından onay aranmaz, görev doğrudan yayınlar.
+Excel'de gerçek bir değişiklik varsa ya da takvimde geriye gidiş görülürse
+bu koda düşmez.
+
+### Sergi durumu tarihten hesaplanır
+
+`sergi_durumu()` (sergiler-uret.py): yaklaşan / devam / geçmiş. Excel'in
+`Durum` sütunu **okunmuyor** (uyuşmazlık yalnızca bildiriliyor). Çıktı üç
+dizi: `devamEdenSergiler`, `yaklasanSergiler`, `gecmisSergiler`; her kayıtta
+ayrıca `durum` alanı var.
+
+`SERGI_BUGUN=YYYY-AA-GG` ortam değişkeni referans günü değiştirir (önizleme ve
+test için). Böyle üretilen dosyaya `SAHTE TARIHLE URETILDI` işareti bırakılır;
+`haftalik-kontrol.py` bu işareti görürse yayınlamayı reddeder. **Bu koruma,
+önizleme için üretilmiş bir dosyanın kazara commit'lenip yayına gitmesi
+üzerine eklendi** — SERGI_BUGUN kullandıktan sonra mutlaka değişkensiz
+yeniden üretin.
 
 Fiyat geçmişi ayrı bir dosyada tutulmaz; `eserler.ts`'in git geçmişinden
 çıkarılır. Deponun başlangıcı (2026-08-24) öncesi bilinmediği için o tarihe
