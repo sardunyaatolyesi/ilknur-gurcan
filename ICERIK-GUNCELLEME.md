@@ -58,11 +58,15 @@ değişmiş mi. Şüpheli bir şey görürse yayınlamaz, size söyler.
 > Görev yalnızca **Claude uygulaması açıkken** çalışır. Pazartesi kapalıysa,
 > uygulamayı açtığınızda çalışır.
 
-Kontrolü istediğiniz zaman elle de çalıştırabilirsiniz:
+Kontrolü istediğiniz zaman elle de çalıştırabilirsiniz. Hangi klasörde
+olduğunuz önemli değil, betik kendi yerini bulur:
 
 ```
-python scripts/haftalik-kontrol.py
+python "C:\Users\HP\Documents\Burak\SardunyaWebPage\ilknur-gurcan\scripts\haftalik-kontrol.py"
 ```
+
+> Terminaliniz **PowerShell**. Orada `&&` çalışmaz; iki komutu arka arkaya
+> çalıştırmak gerekirse `;` kullanın. Yukarıdaki tek komut olduğu için sorun yok.
 
 ---
 
