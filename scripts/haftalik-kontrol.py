@@ -379,6 +379,16 @@ def eskimis_fiyatlar(simdiki: dict[str, dict]) -> tuple[list[str], list[str]]:
 # --------------------------------------------------------------------------
 
 def yayinla(ozet: list[str]) -> None:
+    # SERGI_BUGUN ile üretilmiş bir dosya sahte bir tarihe dayanır ve asla
+    # yayına girmemeli. sergiler-uret.py böyle bir dosyaya işaret bırakıyor.
+    for yol in VERI:
+        icerik = (KOK / yol).read_text(encoding="utf-8")
+        if "SAHTE TARIHLE URETILDI" in icerik:
+            print(f"DURDURULDU: {yol} sahte bir tarihle (SERGI_BUGUN) üretilmiş.")
+            print("Bu dosya yalnızca önizleme içindir. SERGI_BUGUN olmadan")
+            print("yeniden üretip tekrar deneyin.")
+            sys.exit(HATA)
+
     r = subprocess.run(["npm", "run", "build"], cwd=KOK, capture_output=True,
                        encoding="utf-8", errors="replace", shell=True)
     if r.returncode != 0:

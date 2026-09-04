@@ -78,6 +78,10 @@ MEKAN_EN = {
 
 NOT_EN = {"Mansiyon Ödülü": "Honourable Mention"}
 
+# SERGI_BUGUN ile uretilen dosyaya birakilan isaret. haftalik-kontrol.py
+# bu satiri gorurse yayinlamayi reddeder.
+SAHTE_ISARET = "SAHTE TARIHLE URETILDI"
+
 
 def q(s: str) -> str:
     """TS string literal: kesme işareti varsa çift tırnak."""
@@ -272,6 +276,19 @@ def main() -> int:
         return f"export const {ad}: Sergi[] = [\n" + "\n".join(satirlar) + "\n];\n"
 
     toplamGizli = sum(gizli.values())
+
+    # SERGI_BUGUN ile üretilen dosya sahte bir tarihe dayanır ve yayına
+    # ASLA girmemeli. Dosyanın içine işaret bırakılıyor; haftalik-kontrol.py
+    # bu işareti görürse yayınlamayı reddediyor. (Bu koruma, önizleme için
+    # üretilmiş bir dosyanın kazara commit'lenmesi üzerine eklendi.)
+    sahte_uyari = ""
+    if os.environ.get("SERGI_BUGUN", "").strip():
+        sahte_uyari = (f"\n// {SAHTE_ISARET} — bu dosya {bugun_kabul():%d.%m.%Y} tarihi "
+                       f"varsayılarak üretildi.\n// Yalnızca önizleme içindir; "
+                       f"yayına almayın. SERGI_BUGUN olmadan yeniden üretin.\n")
+        print(f"\n  *** DİKKAT: SERGI_BUGUN={os.environ['SERGI_BUGUN']} ile üretildi. ***")
+        print(f"  *** Bu dosya YAYINA ALINMAMALI. Bittiğinde SERGI_BUGUN'suz  ***")
+        print(f"  *** yeniden çalıştırın.                                     ***\n")
     icerik = f"""export interface Sergi {{
   baslik: string;
   baslik_en: string;
@@ -294,6 +311,7 @@ def main() -> int:
 // BU DOSYA OTOMATİK ÜRETİLİR — elle düzenlemeyin.
 // Kaynak: Sergiler.xlsx    Üretim: python scripts/sergiler-uret.py
 // ---------------------------------------------------------------------------
+{sahte_uyari}
 
 // Durum, üretim anındaki tarihe göre hesaplanır. Site statik olduğu için
 // tarih sınırı geçtiğinde yeniden üretilmesi gerekir; haftalık kontrol

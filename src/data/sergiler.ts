@@ -21,14 +21,16 @@ export interface Sergi {
 // Kaynak: Sergiler.xlsx    Üretim: python scripts/sergiler-uret.py
 // ---------------------------------------------------------------------------
 
+
 // Durum, üretim anındaki tarihe göre hesaplanır. Site statik olduğu için
 // tarih sınırı geçtiğinde yeniden üretilmesi gerekir; haftalık kontrol
 // görevi bunu yakalayıp yayına alır.
 export const devamEdenSergiler: Sergi[] = [
-  { baslik: 'Yılbaşı Sergisi', baslik_en: 'New Year Exhibition', tur: 'Karma', tur_en: 'Group Exhibition', mekan: 'Sava Sanat Galerisi', mekan_en: 'Sava Art Gallery', sehir: 'Ankara', tarih: '11 Aralık — 31 Aralık 2026', tarih_en: '11 December — 31 December 2026', donem: 'Aralık 2026', donem_en: 'December 2026', yil: '2026', durum: 'devam' },
+
 ];
 
 export const yaklasanSergiler: Sergi[] = [
+  { baslik: 'Yılbaşı Sergisi', baslik_en: 'New Year Exhibition', tur: 'Karma', tur_en: 'Group Exhibition', mekan: 'Sava Sanat Galerisi', mekan_en: 'Sava Art Gallery', sehir: 'Ankara', tarih: '11 Aralık — 31 Aralık 2026', tarih_en: '11 December — 31 December 2026', donem: 'Aralık 2026', donem_en: 'December 2026', yil: '2026', durum: 'yaklasan' },
   { baslik: 'İlknur Gürcan Kişisel Sergisi', baslik_en: 'İlknur Gürcan Solo Exhibition', tur: 'Kişisel', tur_en: 'Solo Exhibition', mekan: 'Sava Sanat Galerisi', mekan_en: 'Sava Art Gallery', sehir: 'Ankara', tarih: '9 Ocak — 24 Ocak 2027', tarih_en: '9 January — 24 January 2027', donem: 'Ocak 2027', donem_en: 'January 2027', yil: '2027', durum: 'yaklasan' },
 ];
 
