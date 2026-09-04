@@ -42,8 +42,8 @@ başlayın ötekine ulaşırsınız.
 
 Her **pazartesi 09:00**'da bir görev kendiliğinden çalışır ve iki şeye bakar:
 
-1. Excel dosyalarında değişiklik olmuş mu? Olmuşsa hangi eserin neyi değişmiş,
-   tek tek listeler.
+1. **Eserler.xlsx** ve **Sergiler.xlsx**'te değişiklik olmuş mu? Olmuşsa hangi
+   eserin ya da serginin neyi değişmiş, eski ve yeni değeriyle tek tek listeler.
 2. Fiyatı **90 gündür** değişmemiş, hâlâ satışta olan eser var mı?
 
 **Kendiliğinden yayına almaz.** Değişiklik bulursa size özetini gösterir ve sorar;
@@ -51,9 +51,16 @@ siz "yayınla" derseniz yayına alır. Böyle olmasının nedeni şu: Ağustos 2
 Excel'deki iki ayrı "Durum" sütunu yüzünden 21 satılmış eser satıştaymış gibi
 üretilmişti. Otomatik bir yayın bunu fark etmeden siteye çıkarırdı.
 
-Yayına almadan önce ayrıca birkaç mantık kontrolünden geçer — eser sayısı aniden
-düşmüş mü, çok sayıda eser satıştan satışa dönmüş mü, bir fiyat üç kattan fazla
-değişmiş mi. Şüpheli bir şey görürse yayınlamaz, size söyler.
+Yayına almadan önce ayrıca birkaç mantık kontrolünden geçer:
+
+| Eserler için | Sergiler için |
+| :-- | :-- |
+| Eser sayısı aniden düştü mü | Sergi sayısı aniden düştü mü |
+| Çok sayıda eser satıştan satışa döndü mü | Geçmiş bir sergi yeniden "yaklaşan" oldu mu |
+| Bir fiyat üç kattan fazla değişti mi | Tarih alanı boş kalmış mı |
+| Hero veya seçili eser kalmadı mı | |
+
+Şüpheli bir şey görürse yayınlamaz, size söyler.
 
 > Görev yalnızca **Claude uygulaması açıkken** çalışır. Pazartesi kapalıysa,
 > uygulamayı açtığınızda çalışır.

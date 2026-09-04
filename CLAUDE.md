@@ -56,9 +56,17 @@ sıra değişebilir.
 sürümle karşılaştırır, mantık kontrollerinden geçirir ve **ürettiği dosyaları
 geri alır**. Çalışma dizinine dokunmaz; yayına alma `--yayinla` ile ayrı adımdır.
 
-Kontroller (`kontroller()`): eser sayısında %20'den fazla düşüş, üçten fazla
-satıldı→satılabilir dönüşü (Ağustos 2026'daki `Durum` sütunu hatasının imzası),
-üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanması, boş başlık.
+Her iki kaynağı da kapsar: `Eserler.xlsx` ve `Sergiler.xlsx`.
+
+Eser kontrolleri (`kontroller()`): eser sayısında %20'den fazla düşüş, üçten
+fazla satıldı→satılabilir dönüşü (Ağustos 2026'daki `Durum` sütunu hatasının
+imzası), üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanması,
+boş başlık.
+
+Sergi kontrolleri (`sergi_kontrolleri()`): sergi sayısında %20'den fazla düşüş
+(toplu `Gizle` ya da silinmiş satır), geçmiş→yaklaşan geri dönüşü (tarihte yıl
+hatası), boş tarih. Sergilerin slug'ı yok; fark başlık anahtarıyla çıkarılıyor,
+başlık değişirse "çıkarıldı + yeni" olarak görünür.
 
 Fiyat geçmişi ayrı bir dosyada tutulmaz; `eserler.ts`'in git geçmişinden
 çıkarılır. Deponun başlangıcı (2026-08-24) öncesi bilinmediği için o tarihe

@@ -103,6 +103,80 @@ def eserleri_coz(kaynak: str) -> dict[str, dict]:
     return sonuc
 
 
+def sergileri_coz(kaynak: str) -> dict[str, dict]:
+    """
+    Üretilmiş sergiler.ts'i okur. Sergilerin slug'ı yok, anahtar olarak başlık
+    kullanılıyor: başlık değişirse fark 'çıkarıldı + yeni' olarak görünür.
+    Yanıltıcı değil, sadece ayrıntısız.
+    """
+    sonuc: dict[str, dict] = {}
+    liste = ""
+    for satir in kaynak.splitlines():
+        s = satir.strip()
+        if s.startswith("export const yaklasanSergiler"):
+            liste = "yaklaşan"
+            continue
+        if s.startswith("export const gecmisSergiler"):
+            liste = "geçmiş"
+            continue
+        if not s.startswith("{ baslik:"):
+            continue
+
+        def alan(ad: str) -> str:
+            m = re.search(rf"\b{ad}:\s*('(?:[^']*)'|\"(?:[^\"]*)\")", s)
+            return m.group(1).strip("'\"") if m else ""
+
+        b = alan("baslik")
+        if not b:
+            continue
+        sonuc[b] = {
+            "liste": liste,
+            "tur": alan("tur"),
+            "mekan": alan("mekan"),
+            "sehir": alan("sehir"),
+            "tarih": alan("tarih"),
+            "not": alan("not"),
+        }
+    return sonuc
+
+
+def sergi_farki(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list[str]:
+    satirlar: list[str] = []
+    for b in sorted(simdiki.keys() - onceki.keys()):
+        e = simdiki[b]
+        satirlar.append(f"  YENİ      {b} ({e['liste']}) — {e['tarih']}")
+    for b in sorted(onceki.keys() - simdiki.keys()):
+        satirlar.append(f"  ÇIKARILDI {b} — Excel'de silinmiş ya da 'Gizle' yapılmış olabilir")
+    for b in sorted(onceki.keys() & simdiki.keys()):
+        a, y = onceki[b], simdiki[b]
+        for ad, etiket in (("liste", "liste"), ("tur", "tür"), ("mekan", "mekan"),
+                           ("sehir", "şehir"), ("tarih", "tarih"), ("not", "not")):
+            if a[ad] != y[ad]:
+                satirlar.append(f"  {etiket:9} {b}: {a[ad] or '—'} → {y[ad] or '—'}")
+    return satirlar
+
+
+def sergi_kontrolleri(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list[str]:
+    uyari: list[str] = []
+
+    if onceki and len(simdiki) < len(onceki) * 0.8:
+        uyari.append(f"Sergi sayısı {len(onceki)} → {len(simdiki)}. Beşte birden fazlası "
+                     f"kaybolmuş; Excel'de satır silinmiş ya da toplu 'Gizle' yapılmış olabilir.")
+
+    # Yaklaşandan geçmişe düşmek olağan (sergi biter). Tersi olağan değil.
+    geri = [b for b in onceki.keys() & simdiki.keys()
+            if onceki[b]["liste"] == "geçmiş" and simdiki[b]["liste"] == "yaklaşan"]
+    if geri:
+        uyari.append(f"Geçmişteki sergi yeniden 'yaklaşan' oldu: {', '.join(geri)}. "
+                     f"Tarih alanında yıl yanlış girilmiş olabilir.")
+
+    for b, e in sorted(simdiki.items()):
+        if not e["tarih"]:
+            uyari.append(f"{b}: tarih alanı boş.")
+
+    return uyari
+
+
 def fiyat_yaz(v) -> str:
     return f"{v:,} TL".replace(",", ".") if isinstance(v, int) else f'"{v}"'
 
@@ -295,12 +369,13 @@ def main() -> int:
 
     calisma_dizini_temiz_mi()
 
-    onceki_ham = git("show", "HEAD:src/data/eserler.ts")
-    onceki = eserleri_coz(onceki_ham)
+    onceki = eserleri_coz(git("show", "HEAD:src/data/eserler.ts"))
+    onceki_s = sergileri_coz(git("show", "HEAD:src/data/sergiler.ts"))
 
     uret()
     degisen = degisen_dosyalar()
     simdiki = eserleri_coz((KOK / "src/data/eserler.ts").read_text(encoding="utf-8"))
+    simdiki_s = sergileri_coz((KOK / "src/data/sergiler.ts").read_text(encoding="utf-8"))
 
     print(f"Haftalık kontrol — {date.today():%d.%m.%Y}")
 
@@ -312,17 +387,24 @@ def main() -> int:
         ozet: list[str] = []
         uyarilar: list[str] = []
     else:
-        ozet = eser_farki(onceki, simdiki)
-        uyarilar = kontroller(onceki, simdiki)
+        eser_ozet = eser_farki(onceki, simdiki)
+        sergi_ozet = sergi_farki(onceki_s, simdiki_s)
+        ozet = eser_ozet + sergi_ozet
+        uyarilar = kontroller(onceki, simdiki) + sergi_kontrolleri(onceki_s, simdiki_s)
 
         baslik("1. Kaynak dosyalar — DEĞİŞİKLİK VAR")
         print("  Değişen: " + ", ".join(degisen))
-        if ozet:
-            print()
-            for s in ozet:
+        if eser_ozet:
+            print("\n  Eserler.xlsx:")
+            for s in eser_ozet:
                 print(s)
-        elif "src/data/sergiler.ts" in degisen:
-            print("  (eserlerde değişiklik yok; değişen sergiler)")
+        if sergi_ozet:
+            print("\n  Sergiler.xlsx:")
+            for s in sergi_ozet:
+                print(s)
+        if not ozet:
+            print("\n  Üretilen dosya değişti ama içerik farkı çıkarılamadı;")
+            print("  'git diff src/data/' ile bakın.")
 
         baslik("2. Mantık kontrolleri")
         if uyarilar:
