@@ -27,6 +27,12 @@ try:
 except ImportError:
     sys.exit("Pillow kurulu değil.  Kurulum:  pip install Pillow")
 
+try:
+    import piexif                    # telif bilgisini kopyaya taşımak için
+except ImportError:
+    piexif = None
+    print("NOT: piexif kurulu değil, paylaşım kopyalarına telif bilgisi taşınmayacak.")
+
 KOK    = Path(__file__).resolve().parent.parent
 KAYNAK = KOK / "public" / "images"
 HEDEF  = KAYNAK / "paylasim"
@@ -35,6 +41,25 @@ UZUN_KENAR = 1080      # önizleme küçük gösterilir; bu fazlasıyla yeterli
 KALITE     = 82
 EN_DUSUK_KALITE = 72   # altına inince bozulma görünür olmaya başlıyor
 HEDEF_KB   = 260       # WhatsApp'ın ~300 KB sınırının altında pay bırak
+
+
+def telif_tasi(kaynak: Path, hedef: Path) -> None:
+    """
+    Kaynaktaki telif bilgisini kopyaya aktarır.
+
+    Küçültme sırasında görsel yeniden kodlandığı için üstveri kaybolur;
+    scripts/telif-bilgisi-ekle.py ile gömülen bilgi burada geri yazılmazsa
+    paylaşım kopyaları telifsiz kalır.
+    """
+    if piexif is None:
+        return
+    try:
+        exif = piexif.load(str(kaynak))
+        exif.pop("thumbnail", None)      # küçültülmüş dosyaya uymaz
+        exif["1st"] = {}
+        piexif.insert(piexif.dump(exif), str(hedef))
+    except Exception:
+        pass                             # üstveri yoksa sessizce geç
 
 
 def uret(kaynak: Path, hedef: Path) -> tuple[int, int, int]:
@@ -52,11 +77,13 @@ def uret(kaynak: Path, hedef: Path) -> tuple[int, int, int]:
             while True:
                 im.save(hedef, "JPEG", quality=kalite, optimize=True, progressive=True)
                 if hedef.stat().st_size <= HEDEF_KB * 1024:
+                    telif_tasi(kaynak, hedef)
                     return hedef.stat().st_size, kalite, kenar
                 if kalite <= EN_DUSUK_KALITE:
                     break
                 kalite -= 5
         if kenar <= 720:                 # daha fazla küçültmeye gerek yok
+            telif_tasi(kaynak, hedef)
             return hedef.stat().st_size, kalite, kenar
         kenar = int(kenar * 0.85)        # kaliteyi koru, ölçüyü düşür
 
