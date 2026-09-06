@@ -25,21 +25,34 @@ export const SAYFA_ESLESME: { tr: string; en: string }[] = [
   { tr: '/iletisim',  en: '/en/contact' },
 ];
 
-/** Mevcut yolun diğer dildeki karşılığını verir. */
+/**
+ * Sondaki eğik çizgiyi garanti eder.
+ *
+ * Site dizin biçiminde yayınlanıyor: /eserler/aksam-servisi/ — çizgisiz adres
+ * 301 ile çizgiliye yönleniyor. canonical ve site haritası zaten çizgili
+ * biçimi kullanıyor; hreflang'in çizgisiz vermesi Google'ı yönlendirilen bir
+ * adrese işaret ediyordu ve Search Console'da "alternatif standart etiket"
+ * kaydı üretiyordu. Dil değiştirici bağlantıları da böylece 301'e uğramıyor.
+ */
+function egikCizgili(yol: string): string {
+  return yol.endsWith('/') ? yol : yol + '/';
+}
+
+/** Mevcut yolun diğer dildeki karşılığını verir. Sonu her zaman eğik çizgili. */
 export function digerDilYolu(pathname: string, hedef: Dil): string {
   const temiz = pathname.replace(/\/$/, '') || '/';
 
   // Eser detay sayfaları: slug iki dilde de aynı
   const eserTr = temiz.match(/^\/eserler\/(.+)$/);
-  if (eserTr) return hedef === 'en' ? `/en/works/${eserTr[1]}` : temiz;
+  if (eserTr) return egikCizgili(hedef === 'en' ? `/en/works/${eserTr[1]}` : temiz);
 
   const eserEn = temiz.match(/^\/en\/works\/(.+)$/);
-  if (eserEn) return hedef === 'tr' ? `/eserler/${eserEn[1]}` : temiz;
+  if (eserEn) return egikCizgili(hedef === 'tr' ? `/eserler/${eserEn[1]}` : temiz);
 
   const eslesme = SAYFA_ESLESME.find(
     s => s.tr.replace(/\/$/, '') === temiz || s.en.replace(/\/$/, '') === temiz,
   );
-  if (eslesme) return hedef === 'en' ? eslesme.en : eslesme.tr;
+  if (eslesme) return egikCizgili(hedef === 'en' ? eslesme.en : eslesme.tr);
 
   return hedef === 'en' ? '/en/' : '/';
 }
