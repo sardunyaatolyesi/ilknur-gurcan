@@ -105,6 +105,7 @@ def eserleri_coz(kaynak: str) -> dict[str, dict]:
             "baslik": (alan("baslik") or slug).strip("'\""),
             "hero": "hero: true" in s,
             "secili": "secili: true" in s,
+            "foto": (alan("ana_fotograf") or "").strip("'\""),
         }
     return sonuc
 
@@ -306,6 +307,15 @@ def kontroller(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list[str]:
     for s, e in sorted(simdiki.items()):
         if not e["baslik"] or e["baslik"] == s:
             uyari.append(f"{s}: başlık boş görünüyor.")
+
+    eksik_foto = [f"{e['baslik']} ({e['foto']})" for e in simdiki.values()
+                  if e["foto"] and not (KOK / "public" / e["foto"].lstrip("/")).exists()]
+    if eksik_foto:
+        uyari.append(
+            f"{len(eksik_foto)} eserin fotoğraf dosyası public/images altında yok: "
+            f"{', '.join(eksik_foto[:5])}{'…' if len(eksik_foto) > 5 else ''}. "
+            f"Fotoğrafı public/images/ klasörüne koymayı unutmuş olabilirsiniz."
+        )
 
     return uyari
 

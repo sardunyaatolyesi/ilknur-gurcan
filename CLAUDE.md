@@ -61,7 +61,8 @@ Her iki kaynağı da kapsar: `Eserler.xlsx` ve `Sergiler.xlsx`.
 Eser kontrolleri (`kontroller()`): eser sayısında %20'den fazla düşüş, üçten
 fazla satıldı→satılabilir dönüşü (Ağustos 2026'daki `Durum` sütunu hatasının
 imzası), üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanması,
-boş başlık.
+boş başlık, `ana_fotograf` alanı `public/images/` altında karşılığı olmayan
+eser (Eylül 2026'da fotoğrafın `public/images/`'a kopyalanması unutulmuştu).
 
 Sergi kontrolleri (`sergi_kontrolleri()`): sergi sayısında %20'den fazla düşüş
 (toplu `Gizle` ya da silinmiş satır), takvimde geriye gidiş (tarihte yıl
