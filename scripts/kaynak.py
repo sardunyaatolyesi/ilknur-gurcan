@@ -22,6 +22,10 @@ from pathlib import Path
 # "C:/Users/..." biçiminde sabit yol yazılmıyor.
 ALT_YOL = Path("Documents") / "İlknur" / "WebSitesi"
 
+# Fotoğrafların yüksek çözünürlüklü asılları burada (WebSitesi'nin kardeşi,
+# 'Resimler' kısayolunun gösterdiği yer).
+RESIM_ALT_YOL = Path("Documents") / "İlknur" / "Resimler"
+
 
 def _adaylar(dosya_adi: str, depo_koku: Path) -> list[Path]:
     yollar = []
@@ -51,3 +55,19 @@ def excel_yolu(dosya_adi: str, depo_koku: Path) -> Path:
     satirlar = "\n".join(f"       {y}" for y in yollar)
     sys.exit(f"HATA: {dosya_adi} bulunamadı. Bakılan yerler:\n{satirlar}\n"
              f"       Dosya OneDrive'da 'Documents/İlknur/WebSitesi/' altında olmalı.")
+
+
+def resimler_klasoru() -> Path | None:
+    """
+    Fotoğrafların yüksek çözünürlüklü asıllarının tutulduğu OneDrive klasörünü
+    bulur. excel_yolu()'nden farklı olarak burada durmuyor; bulamazsa None
+    döner ve çağıran taraf otomatik dosya aramayı sessizce atlar (Excel
+    kontrolü buna bağlı değil).
+    """
+    for degisken in ("OneDrive", "OneDriveConsumer", "OneDriveCommercial"):
+        kok = os.environ.get(degisken)
+        if kok:
+            aday = Path(kok) / RESIM_ALT_YOL
+            if aday.is_dir():
+                return aday
+    return None

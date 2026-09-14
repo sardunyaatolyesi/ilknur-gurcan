@@ -64,6 +64,15 @@ imzası), üç kattan fazla fiyat sıçraması, hero/seçili eserin sıfırlanma
 boş başlık, `ana_fotograf` alanı `public/images/` altında karşılığı olmayan
 eser (Eylül 2026'da fotoğrafın `public/images/`'a kopyalanması unutulmuştu).
 
+Bu son kontrolden önce `eksik_fotolari_tamamla()` devreye girer: eksik
+fotoğrafı OneDrive'daki `Resimler` klasöründe (tarihli alt klasörler dahil)
+dosya adıyla arar, tam olarak bir eşleşme varsa `public/images/`'a otomatik
+kopyalar. Bulamazsa ya da birden fazla eşleşme varsa dokunmaz; kontroller()
+yine eksik diye işaretleyip yayınlamayı durdurur. Kopyalanan görsel, betiğin
+"çalışma dizinine dokunmaz" kuralının tek istisnasıdır — `--yayinla`
+verilmese bile geri alınmaz, çünkü Excel'in aksine yeniden üretilebilir bir
+çıktı değildir. Commit'lenmesi yine yalnızca `--yayinla` ile olur.
+
 Sergi kontrolleri (`sergi_kontrolleri()`): sergi sayısında %20'den fazla düşüş
 (toplu `Gizle` ya da silinmiş satır), takvimde geriye gidiş (tarihte yıl
 hatası), boş tarih. Sergilerin slug'ı yok; fark başlık anahtarıyla çıkarılıyor,

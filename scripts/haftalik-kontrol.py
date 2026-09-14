@@ -2,11 +2,13 @@
 """
 Haftalık kaynak kontrolü.
 
-İki iş yapar:
+Üç iş yapar:
 
   1. Excel dosyalarında değişiklik olmuş mu diye bakar. Olmuşsa neyin
      değiştiğini eser eser özetler ve mantık kontrollerinden geçirir.
-  2. Fiyatı uzun süredir (varsayılan 90 gün) değişmemiş, satıştaki
+  2. Eksik eser fotoğraflarını OneDrive'daki 'Resimler' klasöründe arar;
+     tek eşleşme varsa public/images'a otomatik kopyalar (bkz. aşağı).
+  3. Fiyatı uzun süredir (varsayılan 90 gün) değişmemiş, satıştaki
      eserleri listeler.
 
 Kullanım (proje kökünden):
@@ -14,11 +16,17 @@ Kullanım (proje kökünden):
     python scripts/haftalik-kontrol.py             # yalnızca bakar, hiçbir şeyi değiştirmez
     python scripts/haftalik-kontrol.py --yayinla   # kontrollerden geçerse derler ve yayına alır
 
-DEĞİŞİKLİK YAPMAZ: --yayinla verilmediğinde üretilen dosyalar geri alınır,
-çalışma dizini betik çalışmadan önceki hâline döner. Yayına alma ayrı ve
-bilinçli bir adımdır; Excel'de yapılmış bir hatanın kimse bakmadan siteye
-çıkmasını istemiyoruz (Ağustos 2026'da Excel'deki çift 'Durum' sütunu
-yüzünden 21 satılmış eser satıştaymış gibi üretilmişti).
+DEĞİŞİKLİK YAPMAZ: --yayinla verilmediğinde üretilen src/data/*.ts dosyaları
+geri alınır, çalışma dizini betik çalışmadan önceki hâline döner. Yayına
+alma ayrı ve bilinçli bir adımdır; Excel'de yapılmış bir hatanın kimse
+bakmadan siteye çıkmasını istemiyoruz (Ağustos 2026'da Excel'deki çift
+'Durum' sütunu yüzünden 21 satılmış eser satıştaymış gibi üretilmişti).
+
+BUNUN TEK İSTİSNASI eksik fotoğraf kopyalama adımıdır: OneDrive'da bulunup
+public/images'a kopyalanan bir görsel, --yayinla verilmese bile çalışma
+dizininde kalır (geri alınmaz). Excel verisinin aksine görsel dosyası
+yeniden üretilebilir bir çıktı değil; bir daha aratmamak için yerinde
+bırakılıyor. Commit'lenmesi yine yalnızca --yayinla ile olur.
 
 Çıkış kodları:
     0  değişiklik yok
@@ -34,6 +42,8 @@ import subprocess
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+from kaynak import resimler_klasoru   # aynı klasördeki yardımcı
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -274,6 +284,53 @@ def eser_farki(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list[str]:
 # 2. Mantık kontrolleri
 # --------------------------------------------------------------------------
 
+def eksik_fotolari_tamamla(simdiki: dict[str, dict]) -> tuple[list[str], list[str], list[str]]:
+    """
+    ana_fotograf alanı public/images altında karşılığı olmayan eserler için
+    OneDrive'daki 'Resimler' klasöründe (tarihli alt klasörler dahil) aynı
+    adlı dosyayı arar. Tam olarak bir eşleşme varsa public/images'a kopyalar.
+
+    Bulunamayan ya da birden fazla eşleşen dosyalar kopyalanmaz; kontroller()
+    bunları hâlâ eksik olarak yakalayıp yayınlamayı durdurur. Buradaki notlar
+    sebebi netleştirir (klasör yok / eşleşme yok / belirsiz).
+
+    Döner: (kopyalanan satırları, git'e eklenecek göreli yollar, ek notlar)
+    """
+    eksikler = [(e["baslik"], e["foto"]) for e in simdiki.values()
+                if e.get("foto") and not (KOK / "public" / e["foto"].lstrip("/")).exists()]
+    if not eksikler:
+        return [], [], []
+
+    klasor = resimler_klasoru()
+    if klasor is None:
+        return [], [], ["OneDrive'daki 'Resimler' klasörü bulunamadı; eksik fotoğraflar "
+                        "otomatik aranamadı."]
+
+    kopyalanan: list[str] = []
+    yollar: list[str] = []
+    notlar: list[str] = []
+
+    for baslik_metni, foto in eksikler:
+        dosya_adi = Path(foto).name
+        adaylar = sorted(p for p in klasor.rglob(dosya_adi) if p.is_file())
+        if not adaylar:
+            continue                    # kontroller() genel uyarıyı basacak
+        if len(adaylar) > 1:
+            notlar.append(f"{baslik_metni}: '{dosya_adi}' Resimler klasöründe birden fazla "
+                          f"yerde bulundu, hangisi doğru olduğu belirsiz olduğu için "
+                          f"kopyalanmadı.")
+            continue
+
+        hedef = KOK / "public" / foto.lstrip("/")
+        hedef.parent.mkdir(parents=True, exist_ok=True)
+        hedef.write_bytes(adaylar[0].read_bytes())
+        kopyalanan.append(f"  {baslik_metni}: {dosya_adi} → public/images/  "
+                          f"(kaynak: {adaylar[0]})")
+        yollar.append(str(hedef.relative_to(KOK)))
+
+    return kopyalanan, yollar, notlar
+
+
 def kontroller(onceki: dict[str, dict], simdiki: dict[str, dict]) -> list[str]:
     """
     Şüpheli görünen değişiklikleri döndürür. Boş liste = her şey olağan.
@@ -388,7 +445,7 @@ def eskimis_fiyatlar(simdiki: dict[str, dict]) -> tuple[list[str], list[str]]:
 # Yayına alma
 # --------------------------------------------------------------------------
 
-def yayinla(ozet: list[str]) -> None:
+def yayinla(ozet: list[str], ekstra_yollar: list[str] | None = None) -> None:
     # SERGI_BUGUN ile üretilmiş bir dosya sahte bir tarihe dayanır ve asla
     # yayına girmemeli. sergiler-uret.py böyle bir dosyaya işaret bırakıyor.
     for yol in VERI:
@@ -407,7 +464,7 @@ def yayinla(ozet: list[str]) -> None:
         sys.exit(HATA)
     print("  npm run build tamam.")
 
-    git("add", "--", *VERI)
+    git("add", "--", *VERI, *(ekstra_yollar or []))
     mesaj = ("content: Excel'den güncelleme\n\n"
              + "\n".join(s.strip() for s in ozet[:20])
              + "\n\nscripts/haftalik-kontrol.py --yayinla ile üretildi.\n")
@@ -441,6 +498,7 @@ def main() -> int:
     print(f"Haftalık kontrol — {date.today():%d.%m.%Y}")
 
     # --- Değişiklik ---
+    kopya_yollari: list[str] = []
     if not degisen:
         baslik("1. Kaynak dosyalar")
         print("  Değişiklik yok. Site Excel ile uyumlu.")
@@ -451,13 +509,20 @@ def main() -> int:
         eser_ozet = eser_farki(onceki, simdiki)
         sergi_ozet = sergi_farki(onceki_s, simdiki_s)
         ozet = eser_ozet + sergi_ozet
-        uyarilar = kontroller(onceki, simdiki) + sergi_kontrolleri(onceki_s, simdiki_s)
+
+        kopyalanan, kopya_yollari, foto_notlari = eksik_fotolari_tamamla(simdiki)
+        uyarilar = (kontroller(onceki, simdiki) + sergi_kontrolleri(onceki_s, simdiki_s)
+                   + foto_notlari)
 
         baslik("1. Kaynak dosyalar — DEĞİŞİKLİK VAR")
         print("  Değişen: " + ", ".join(degisen))
         if eser_ozet:
             print("\n  Eserler.xlsx:")
             for s in eser_ozet:
+                print(s)
+        if kopyalanan:
+            print("\n  Fotoğraf otomatik tamamlandı (Resimler klasöründen bulundu):")
+            for s in kopyalanan:
                 print(s)
         if sergi_ozet:
             print("\n  Sergiler.xlsx:")
@@ -505,7 +570,7 @@ def main() -> int:
         print("  Yukarıdaki uyarıları inceleyip Excel'i düzeltin, sonra tekrar çalıştırın.")
     elif args.yayinla:
         print("  Kontroller geçti, yayına alınıyor...")
-        yayinla(ozet)
+        yayinla(ozet, kopya_yollari)
         return sonuc
     elif sonuc == TARIH:
         print("  Sergi takvimi ilerlemiş. Onay gerekmiyor, yayına alınabilir:")
