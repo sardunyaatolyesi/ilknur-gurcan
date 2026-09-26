@@ -225,10 +225,13 @@ sayfalar işe yarıyor mu).
 
 **Ölçüm geçmişi** — kıyaslamak için:
 
+Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
+
 | Tarih | Tıklama | Gösterim | TO | Konum |
 | :-- | --: | --: | --: | --: |
 | 06.09.2026 | 14 | 105 | %13,3 | 9,6 |
 | 15.09.2026 | 17 | 196 | %8,7 | 8,1 |
+| 26.09.2026 | 25 | 312 | %8,0 | 7,4 |
 
 > **İki tuzak.** (1) Sorgu listesi toplamı üstteki sayılara eşit çıkmaz: Google,
 > çok az kişinin yaptığı aramaları gizlilik gereği gizler. (2) TO'nun düşmesi
