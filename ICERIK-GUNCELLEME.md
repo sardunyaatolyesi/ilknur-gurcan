@@ -204,6 +204,46 @@ sayfada Türkçe ad görünür — sözlüğe eklemek yeterli.
 
 ---
 
+## Sayfanın istatistikleri
+
+**Google Search Console → Performans → Arama sonuçları**
+
+`search.google.com/search-console`
+
+Sağ üstten tarih aralığını **Son 28 gün** yapın. Üstteki dört sayı:
+
+| | Ne demek |
+| :-- | :-- |
+| **Toplam tıklama** | Google'dan siteye kaç kişi geldi |
+| **Toplam gösterim** | Arama sonuçlarında kaç kez görünüldü |
+| **Ortalama TO** | Görenlerin yüzde kaçı tıkladı |
+| **Ortalama konum** | Sonuçlarda ortalama kaçıncı sıra (1–10 = birinci sayfa) |
+
+Altındaki sekmelerden en işe yarayanlar: **Sorgular** (insanlar hangi kelimelerle
+buluyor), **Sayfa sayısı** (hangi eserler ilgi çekiyor), **Ülkeler** (İngilizce
+sayfalar işe yarıyor mu).
+
+**Ölçüm geçmişi** — kıyaslamak için:
+
+| Tarih | Tıklama | Gösterim | TO | Konum |
+| :-- | --: | --: | --: | --: |
+| 06.09.2026 | 14 | 105 | %13,3 | 9,6 |
+| 15.09.2026 | 17 | 196 | %8,7 | 8,1 |
+
+> **İki tuzak.** (1) Sorgu listesi toplamı üstteki sayılara eşit çıkmaz: Google,
+> çok az kişinin yaptığı aramaları gizlilik gereği gizler. (2) TO'nun düşmesi
+> her zaman kötü değildir — gösterim hızlı artarken tıklama yavaş artıyorsa oran
+> matematik gereği düşer.
+
+**Cloudflare paneline bakmayın**, ücretsiz planda o ekran veri göstermiyor;
+denendi, hepsi sıfır çıktı.
+
+Arama sonucunda sitenin kaçıncı sırada olduğunu kendiniz kontrol edecekseniz
+**gizli sekme** kullanın. Normal pencerede Google size özel sonuç gösterir ve
+site olduğundan yukarıda görünür.
+
+---
+
 ## Değişikliği yayına alma
 
 Excel'i kaydedip **kapattıktan** sonra, proje klasöründe sırayla:
