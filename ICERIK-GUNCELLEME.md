@@ -238,6 +238,25 @@ Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
 > her zaman kötü değildir — gösterim hızlı artarken tıklama yavaş artıyorsa oran
 > matematik gereği düşer.
 
+### "sardunya resim atölyesi" sorgusu
+
+06.09.2026'da ana sayfa ve İletişim başlıklarına atölye adı eklendi. O güne
+kadar bu ifade sitedeki hiçbir başlıkta geçmiyordu. Değişikliğin etkisini
+izlemenin en doğrudan yolu bu tek sorgu:
+
+Sayılar **Performans → Sorgular** sekmesinden, sıralama **gizli sekmede**
+Google'da aratarak bakılır.
+
+| Tarih | Gösterim | Tıklama | Aramada sıra |
+| :-- | --: | --: | :-- |
+| 06.09.2026 | listede yok | — | 4. |
+| 15.09.2026 | 5 | 0 | 2. |
+| 26.09.2026 | 21 | 1 | bakılmadı |
+
+Önündeki tek sonuç atölyenin **kendi Instagram hesabı**. Onu geçmek kısa vadede
+gerçekçi değil (720+ takipçi, yıllardır aktif, Instagram alan adı çok güçlü) ve
+marka aramasında kendi sosyal hesabının önde olması kayıp sayılmaz.
+
 **Cloudflare paneline bakmayın**, ücretsiz planda o ekran veri göstermiyor;
 denendi, hepsi sıfır çıktı.
 
