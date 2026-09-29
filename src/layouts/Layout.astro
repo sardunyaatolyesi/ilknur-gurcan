@@ -79,7 +79,11 @@ const boyut = ogYol.startsWith('http') ? null : gorselBoyut(ogYol);
   <link rel="alternate" hreflang="en" href={site + enYolu} />
   <link rel="alternate" hreflang="x-default" href={site + trYolu} />
 
+  {/* SVG'yi destekleyen tarayıcılar onu, eskiler .ico'yu alır. .ico ayrıca
+      açıkça bildiriliyor: Google arama sonuçlarındaki simge için onu
+      istiyor. İkisi de scripts/favicon-uret.py ile üretiliyor. */}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
 </head>
 <body class="min-h-screen flex flex-col">
   <Nav />
