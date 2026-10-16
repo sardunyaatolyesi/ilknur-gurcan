@@ -232,6 +232,19 @@ Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
 | 06.09.2026 | 14 | 105 | %13,3 | 9,6 |
 | 15.09.2026 | 17 | 196 | %8,7 | 8,1 |
 | 26.09.2026 | 25 | 312 | %8,0 | 7,4 |
+| 16.10.2026 | 17 | 338 | %5,0 | 9,0 |
+
+> **Tıklama neden düştü (26.09 → 16.10)?** Pencere kayıyor. 26 Eylül ölçümü
+> 28.08–24.09 aralığını kapsıyordu ve içinde **1 Eylül duyurusu** vardı; 16 Ekim
+> ölçümü (17.09–13.10) duyuruyu hiç içermiyor. Yani düşüş sitenin gerilemesi
+> değil, tek seferlik bir olayın pencereden çıkması. Asıl bakılacak sayı
+> **gösterim**: 312'den 338'e çıkmış, yani duyurudan bağımsız taban görünürlük
+> büyümeye devam ediyor.
+>
+> **Ortalama konum neden kötüleşti?** Bu sayı tüm sorguların ağırlıklı
+> ortalaması. Gösterimlerin giderek daha büyük kısmı, sitenin daha aşağıda
+> çıktığı mekân adı aramalarından geliyor (aşağıya bakın) ve ortalamayı aşağı
+> çekiyor. Marka aramalarındaki sıra düşmedi, tersine iyileşti.
 
 > **İki tuzak.** (1) Sorgu listesi toplamı üstteki sayılara eşit çıkmaz: Google,
 > çok az kişinin yaptığı aramaları gizlilik gereği gizler. (2) TO'nun düşmesi
@@ -252,6 +265,7 @@ Google'da aratarak bakılır.
 | 06.09.2026 | listede yok | — | 4. |
 | 15.09.2026 | 5 | 0 | 2. |
 | 26.09.2026 | 21 | 1 | bakılmadı |
+| 16.10.2026 | 18 | **3** | bakılmadı |
 
 Önündeki tek sonuç atölyenin **kendi Instagram hesabı**. Onu geçmek kısa vadede
 gerçekçi değil (720+ takipçi, yıllardır aktif, Instagram alan adı çok güçlü) ve
