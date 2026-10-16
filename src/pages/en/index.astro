@@ -1,4 +1,5 @@
 ---
+import { eserAlt } from '../../utils/eserAlt';
 import Layout from '../../layouts/Layout.astro';
 import EserKart from '../../components/EserKart.astro';
 import { eserler } from '../../data/eserler';
@@ -25,8 +26,8 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
       <img
         id="hero-img"
         src={base + heroDefault.ana_fotograf}
-        data-heroes={heroEserler.map(e => base + e.ana_fotograf).join(',')}
-        alt="İlknur Gürcan — Featured Work"
+        data-heroes={JSON.stringify(heroEserler.map(e => ({ src: base + e.ana_fotograf, alt: eserAlt(e, 'en') })))}
+        alt={eserAlt(heroDefault, 'en')}
         class="w-full h-full object-cover opacity-75"
         loading="eager"
       />
@@ -223,9 +224,14 @@ const base          = import.meta.env.BASE_URL.replace(/\/$/, '');
   // Hero: pick a random one if several are marked
   const heroImg = document.getElementById('hero-img') as HTMLImageElement | null;
   if (heroImg) {
-    const heroes = (heroImg.dataset.heroes ?? '').split(',').filter(Boolean);
+    // Görsel rastgele değişiyor; alt metni de onunla birlikte değişmeli,
+    // yoksa ekran okuyucu ve arama motoru yanlış eseri okur.
+    let heroes: { src: string; alt: string }[] = [];
+    try { heroes = JSON.parse(heroImg.dataset.heroes || '[]'); } catch {}
     if (heroes.length > 1) {
-      heroImg.src = heroes[Math.floor(Math.random() * heroes.length)];
+      const secilen = heroes[Math.floor(Math.random() * heroes.length)];
+      heroImg.src = secilen.src;
+      heroImg.alt = secilen.alt;
     }
   }
 

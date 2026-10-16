@@ -1,4 +1,5 @@
 ---
+import { eserAlt } from '../../../utils/eserAlt';
 import Layout from '../../../layouts/Layout.astro';
 import EserKart from '../../../components/EserKart.astro';
 import EserSema from '../../../components/EserSema.astro';
@@ -159,7 +160,7 @@ const epostaLinki = (konu: string) =>
         <div id="loupe-container" class="relative cursor-crosshair select-none w-full">
           <img
             src={base + eser.ana_fotograf}
-            alt={eser.baslik_en}
+            alt={eserAlt(eser, 'en')}
             id="main-img"
             class="w-full h-auto block"
             style="max-height: calc(100vh - 180px); object-fit: contain;"
