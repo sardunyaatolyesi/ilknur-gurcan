@@ -91,5 +91,21 @@ const boyut = ogYol.startsWith('http') ? null : gorselBoyut(ogYol);
     <slot />
   </main>
   <Footer />
+
+  {/* Cloudflare Web Analytics.
+      Search Console yalnızca Google aramasını, İşletme Profili yalnızca
+      Haritalar'ı ölçüyordu; doğrudan adres yazarak, Instagram'dan ya da
+      LinkedIn'den gelen ziyaretçi hiçbir yerde görünmüyordu. Bu onları da
+      sayıyor ve nereden geldiklerini söylüyor.
+
+      Çerez kullanmıyor; bu yüzden çerez onayı bandı gerekmiyor.
+      Token gizli değil — her sayfanın kaynağında görünür, kimlik doğrulamaz.
+      is:inline: Astro üçüncü taraf betiğine dokunmasın. */}
+  <script
+    is:inline
+    type="module"
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "d8498c5434124ed49c3a2f63613a4408"}'
+  ></script>
 </body>
 </html>
