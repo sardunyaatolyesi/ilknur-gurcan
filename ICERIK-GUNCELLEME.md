@@ -206,6 +206,40 @@ sayfada Türkçe ad görünür — sözlüğe eklemek yeterli.
 
 ## Sayfanın istatistikleri
 
+Üç ayrı kaynak var ve **hiçbiri tek başına resmin tamamını vermiyor.**
+
+| Kaynak | Neyi ölçer | Neyi ölçmez |
+| :-- | :-- | :-- |
+| **Google Search Console** | Google aramasından gelenler (web + görsel) | Haritalar, doğrudan, sosyal medya |
+| **Google İşletme Profili** | Haritalar: görüntülenme, yol tarifi, telefon, web sitesi tıklaması | Arama sonuçlarından gelenler |
+| **Cloudflare Web Analytics** | **Herkesi** — ve nereden geldiğini | — |
+
+Üçü de ücretsiz. Üçüncüsü 17.10.2026'da açıldı; **o tarihten öncesi için veri yok.**
+
+### Google İşletme Profili
+
+**business.google.com** → İlknur Hanım'ın hesabıyla giriş → Performans
+
+Ya da Google'da `sardunya resim atölyesi` aratıp panelden girilir.
+
+Sekmeler: Genel Bakış, Telefonla arama, Yol tarifi, **Web sitesi tıklamaları**.
+
+Ölçüm (May–Eki 2026, 6 ay): yol tarifi **274**, web sitesi **17**, telefon **10**.
+Etkileşimlerin %91'i yol tarifi — bu iş için ana kanal Haritalar, site değil.
+
+### Cloudflare Web Analytics
+
+**dash.cloudflare.com** → sol menü → **Web analytics** *("Account analytics" değil)*
+
+Burada görülenler: ziyaretçi sayısı, hangi sayfaya bakıldığı ve **nereden gelindiği** —
+Google mı, Instagram mı, LinkedIn mi, doğrudan adres yazarak mı.
+
+Ölçüm betiği `src/layouts/Layout.astro` içinde, sayfanın sonunda. Çerez kullanmıyor,
+bu yüzden çerez onayı bandı gerekmiyor. Reklam engelleyici kullanan ziyaretçiler
+sayılmaz; gerçek sayı bir miktar yüksektir, eğilim yine de doğrudur.
+
+### Google Search Console
+
 **Google Search Console → Performans → Arama sonuçları**
 
 `search.google.com/search-console`
@@ -271,8 +305,8 @@ Google'da aratarak bakılır.
 gerçekçi değil (720+ takipçi, yıllardır aktif, Instagram alan adı çok güçlü) ve
 marka aramasında kendi sosyal hesabının önde olması kayıp sayılmaz.
 
-**Cloudflare paneline bakmayın**, ücretsiz planda o ekran veri göstermiyor;
-denendi, hepsi sıfır çıktı.
+> **Not:** Cloudflare panelindeki **"HTTP Traffic"** ekranı ücretsiz planda boştur;
+> aradığınız yer orası değil, yukarıdaki **Web analytics**.
 
 Arama sonucunda sitenin kaçıncı sırada olduğunu kendiniz kontrol edecekseniz
 **gizli sekme** kullanın. Normal pencerede Google size özel sonuç gösterir ve
