@@ -238,6 +238,26 @@ Google mı, Instagram mı, LinkedIn mi, doğrudan adres yazarak mı.
 bu yüzden çerez onayı bandı gerekmiyor. Reklam engelleyici kullanan ziyaretçiler
 sayılmaz; gerçek sayı bir miktar yüksektir, eğilim yine de doğrudur.
 
+> **Bu paneli ülke filtresi olmadan okumayın.** Genel toplamın büyük kısmı Çin'den
+> gelen otomatik erişim; gerçek kitleyi görmek için **Turkey** filtresi koyun.
+> Cloudflare düşük hacimde bütün sayıları **ona yuvarlıyor**, yani "30" gerçekte
+> 25 de olabilir 34 de.
+
+**Ölçüm geçmişi** (kurulum 17.10.2026):
+
+| Tarih | Gün | Toplam | Çin (bot) | Türkiye | Instagram | Sayfa/ziyaret |
+| :-- | --: | --: | --: | --: | --: | --: |
+| 25.10.2026 | 8 | 110 | 50 | 30 | 10 | 1,18 |
+| 07.11.2026 | 21 | 220 | 140 | 30 | 10 | 1,18 |
+
+07.11.2026'daki kırılım, Çin trafiğinin otomatik olduğunu doğruladı: **Çin 140** ile
+**tarayıcısı "Unknown" olan 140** birebir örtüşüyor; kalan 80 ziyaret gerçek
+tarayıcılardan (Chrome 30, MobileSafari 30, Safari 20) ve diğer dört ülkeden
+(Türkiye 30, Fransa 20, ABD 20, Kanada 10) geliyor — o da birebir örtüşüyor.
+
+İki şey dikkat çekiyor: **Türkiye 13 günde hiç artmadı**, ve **Instagram'dan
+13 günde tek ziyaret gelmedi** (biyografideki bağlantı kontrol edilmeli).
+
 ### Google Search Console
 
 **Google Search Console → Performans → Arama sonuçları**
