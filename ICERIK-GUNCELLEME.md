@@ -289,6 +289,24 @@ Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
 | 16.10.2026 | 17 | 338 | %5,0 | 9,0 |
 | 07.11.2026 | 9 | 430 | %2,1 | 9,1 |
 
+> **Tıklama neden düşüyor (25 → 17 → 9)?** Sıralama kaybı değil; konum üç ölçümdür
+> 9 civarında sabit. İki şey aynı anda oluyor:
+>
+> 1. **Tıklanmayan gösterimler artıyor.** 07.11'de en çok gösterim alan sorgu
+>    *"şapkalı kadın"* (53 gösterim, 0 tıklama) — Eylül'de eklenen eserin adı, ama
+>    çok genel bir ifade olduğu için alakasız arayıcı çekiyor. Mekân adı aramaları
+>    da sürüyor (akşamüstü sahaf 17, naftalin 12, diyojen sahaf 9 — hepsi 0 tıklama).
+>    TO'nun %8'den %2,1'e düşmesinin başlıca sebebi bu.
+>
+> 2. **İsim aramaları çöktü.** Eylül'de 25 tıklamanın 24'ü Google'ın gizlediği
+>    aramalardan (isim aramaları) geliyordu; 07.11'de 9 tıklamanın yalnızca 6'sı.
+>    *"ilknur gürcan"* 2 gösterim, *"ilknur"* 3 gösterim almış. Sebebi: 1 Eylül
+>    duyurusundan beri yeni bir şey olmaması.
+>
+> **Çıkarım:** site tarafında yapılacak bir şey yok — teknik sorun da görünürlük
+> sorunu da yok. Eksik olan, insanlara adını hatırlatacak etkinlik. Trafiği
+> sergiler ve sosyal medya paylaşımları belirliyor.
+
 > **Tıklama neden düştü (26.09 → 16.10)?** Pencere kayıyor. 26 Eylül ölçümü
 > 28.08–24.09 aralığını kapsıyordu ve içinde **1 Eylül duyurusu** vardı; 16 Ekim
 > ölçümü (17.09–13.10) duyuruyu hiç içermiyor. Yani düşüş sitenin gerilemesi
@@ -337,6 +355,7 @@ Google'da aratarak bakılır.
 | 06.09.2026 | listede yok | — | 4. |
 | 15.09.2026 | 5 | 0 | 2. |
 | 26.09.2026 | 21 | 1 | bakılmadı |
+| 07.11.2026 | 36 | 3 | bakılmadı |
 | 16.10.2026 | 18 | **3** | bakılmadı |
 
 Önündeki tek sonuç atölyenin **kendi Instagram hesabı**. Onu geçmek kısa vadede
