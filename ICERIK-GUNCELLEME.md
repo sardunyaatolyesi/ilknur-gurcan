@@ -287,6 +287,7 @@ Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
 | 15.09.2026 | 17 | 196 | %8,7 | 8,1 |
 | 26.09.2026 | 25 | 312 | %8,0 | 7,4 |
 | 16.10.2026 | 17 | 338 | %5,0 | 9,0 |
+| 07.11.2026 | 9 | 430 | %2,1 | 9,1 |
 
 > **Tıklama neden düştü (26.09 → 16.10)?** Pencere kayıyor. 26 Eylül ölçümü
 > 28.08–24.09 aralığını kapsıyordu ve içinde **1 Eylül duyurusu** vardı; 16 Ekim
@@ -304,6 +305,23 @@ Hepsi **28 günlük** pencere; farklı aralıkları aynı tabloya koymayın.
 > çok az kişinin yaptığı aramaları gizlilik gereği gizler. (2) TO'nun düşmesi
 > her zaman kötü değildir — gösterim hızlı artarken tıklama yavaş artıyorsa oran
 > matematik gereği düşer.
+
+### Görsel araması (Arama türü: Görsel)
+
+17.10.2026'da eser görsellerinin alt metni zenginleştirildi. Etkisi izleniyor:
+
+| Tarih | Gösterim | Tıklama | Konum |
+| :-- | --: | --: | --: |
+| 16.10.2026 | 454 | 0 | 34,8 |
+| 07.11.2026 | 784 | 0 | 35,6 |
+
+*(ikisi de 3 aylık pencere)*
+
+Üç haftada sıralama oynamadı. Gösterim artıyor ama 35. sıra, görsel ızgarasında
+kimsenin kaydırmadığı derinlik. **Aralık ortasında tekrar ölçülecek** — o zaman
+alt metninin üzerinden iki ay geçmiş olur. Sıralama 25'in altına inmezse bu kanal
+kapatılıp emek Haritalar ve Instagram'a verilmeli; görsel aramaları zaten mekân
+adı aramaları (naftalin cafe, diyojen, kitap kokusu) ve satın alma niyeti taşımıyor.
 
 ### "sardunya resim atölyesi" sorgusu
 
